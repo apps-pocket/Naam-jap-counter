@@ -1,0 +1,4304 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="saffron">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#d9791a" id="meta-theme">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Naam Counter</title>
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<style>
+@property --ang {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes spin {
+  to { --ang: 360deg; }
+}
+@keyframes shimmerBg {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+@keyframes glossSweep {
+  0% { transform: translateX(-140%) skewX(-22deg); }
+  45%, 100% { transform: translateX(240%) skewX(-22deg); }
+}
+@keyframes flameFlicker {
+  0%, 100% { transform: scaleX(1) scaleY(1) rotate(0deg); }
+  25% { transform: scaleX(0.96) scaleY(1.03) rotate(-1deg); }
+  50% { transform: scaleX(1.03) scaleY(0.98) rotate(1deg); }
+  75% { transform: scaleX(0.98) scaleY(1.02) rotate(-0.5deg); }
+}
+
+:root {
+  --bg: #fff8ee;
+  --card: #ffffff;
+  --ink: #3b2a14;
+  --line: #ecd9bd;
+  --accent: #d9791a;
+  --accent2: #f4b04a;
+  --mute: #8a7557;
+  --ok: #2e8b57;
+  --danger: #c0392b;
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) {
+    --bg: #1b140b; --card: #271c10; --ink: #f6e7cf; --line: #403019;
+    --accent: #f0932b; --accent2: #ffc46b; --mute: #b39a73; --ok: #58c58a;
+  }
+}
+
+/* Themes */
+html[data-theme="saffron"] {
+  --bg: #fff8ee; --card: #ffffff; --ink: #4a2c0a; --line: #ecd9bd;
+  --accent: #d9791a; --accent2: #f4b04a; --mute: #8a7557; --ok: #2e8b57;
+}
+html[data-theme="divine_forest"] {
+  --bg: #0f1b2d; --card: #16263d; --ink: #f0f6ff; --line: #294263;
+  --accent: #3b82f6; --accent2: #60a5fa; --mute: #94a3b8; --ok: #34d399;
+}
+html[data-theme="royal_maroon"] {
+  --bg: #fdf5ed; --card: #fffaf5; --ink: #4a0e17; --line: #e8d0c5;
+  --accent: #7b112c; --accent2: #b83352; --mute: #7c585e; --ok: #2e8b57;
+}
+html[data-theme="vrindavan_rose"] {
+  --bg: #fff4f7; --card: #ffffff; --ink: #4a192c; --line: #f5cedb;
+  --accent: #c92a68; --accent2: #f06595; --mute: #8c5d70; --ok: #2e8b57;
+}
+html[data-theme="shiv_neel"] {
+  --bg: #111c35; --card: #182747; --ink: #eef4ff; --line: #2c4475;
+  --accent: #4c8dff; --accent2: #82b1ff; --mute: #9bb0d6; --ok: #4ade80;
+}
+html[data-theme="golden_mandir"] {
+  --bg: #fef7e6; --card: #fffdf7; --ink: #422c06; --line: #ead5a7;
+  --accent: #b7791f; --accent2: #ecc94b; --mute: #826b44; --ok: #2e8b57;
+}
+html[data-theme="lotus_serenity"] {
+  --bg: #fff8fa; --card: #ffffff; --ink: #382c32; --line: #efd2dc;
+  --accent: #b84a72; --accent2: #e58aa8; --mute: #7d666e; --ok: #2e8b57;
+}
+html[data-theme="midnight_bhakti"] {
+  --bg: #1d1427; --card: #281c36; --ink: #f5eeff; --line: #433059;
+  --accent: #a855f7; --accent2: #c084fc; --mute: #a996bd; --ok: #4ade80;
+}
+html[data-theme="pure_ivory"] {
+  --bg: #fcfaf5; --card: #ffffff; --ink: #2b261f; --line: #e6dfd3;
+  --accent: #8c6d46; --accent2: #b8986e; --mute: #787065; --ok: #2e8b57;
+}
+html[data-theme="sacred_sky"] {
+  --bg: #f0f8ff; --card: #ffffff; --ink: #12344d; --line: #cbe3f7;
+  --accent: #0284c7; --accent2: #38bdf8; --mute: #587991; --ok: #2e8b57;
+}
+html[data-theme="night"] {
+  --bg: #1b140b; --card: #271c10; --ink: #f6e7cf; --line: #403019;
+  --accent: #f0932b; --accent2: #ffc46b; --mute: #b39a73; --ok: #58c58a;
+}
+html[data-theme="krishna"] {
+  --bg: #eef4ff; --card: #ffffff; --ink: #12233f; --line: #cfdcf2;
+  --accent: #2f6fd6; --accent2: #7fb0ff; --mute: #5f7390; --ok: #2e8b57;
+}
+html[data-theme="tulsi"] {
+  --bg: #eefaf0; --card: #ffffff; --ink: #12301c; --line: #cde9d5;
+  --accent: #2e9b57; --accent2: #7fd69a; --mute: #5a7f66; --ok: #1f7a45;
+}
+html[data-theme="rudraksha"] {
+  --bg: #fbeedb; --card: #fffaf2; --ink: #3a1f10; --line: #ecd3b0;
+  --accent: #b5361b; --accent2: #e08a3c; --mute: #8d6e55; --ok: #2e8b57;
+}
+html[data-theme="ganga"] {
+  --bg: #eaf7fb; --card: #ffffff; --ink: #0f2f3a; --line: #c6e5ee;
+  --accent: #1a8fa8; --accent2: #7ad0e0; --mute: #568795; --ok: #2e8b57;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) calc(78px + env(safe-area-inset-bottom, 0px)) env(safe-area-inset-left, 0px);
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Devanagari", sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+  overflow-x: hidden;
+  min-height: 100dvh;
+  touch-action: pan-y;
+}
+
+input, textarea, select {
+  user-select: text;
+  -webkit-user-select: text;
+  font-family: inherit;
+}
+
+.app-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 12px 14px 24px;
+}
+
+/* Signature Shimmer Sweep (Every 2.8 seconds) */
+.shimmer-fill {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(105deg, var(--accent) 0%, var(--accent2) 50%, var(--accent) 100%) !important;
+  background-size: 220% 100% !important;
+  animation: shimmerBg 2.8s linear infinite;
+  color: #ffffff !important;
+  border-color: var(--accent) !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.28);
+}
+.shimmer-fill::after {
+  content: "";
+  position: absolute;
+  top: -10%;
+  bottom: -10%;
+  left: 0;
+  width: 48%;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.48) 50%, rgba(255,255,255,0) 100%);
+  transform: translateX(-140%) skewX(-22deg);
+  animation: glossSweep 2.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.rot-shimmer {
+  border: 2.5px solid transparent !important;
+  background: linear-gradient(var(--card), var(--card)) padding-box,
+              conic-gradient(from var(--ang), var(--accent) 0deg, var(--accent) 190deg, var(--accent2) 265deg, #fff 330deg, var(--accent) 360deg) border-box !important;
+  animation: spin 2s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer-fill, .shimmer-fill::after, .rot-shimmer, .diya-flame-anim {
+    animation: none !important;
+  }
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.app-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Install Banner */
+.install-banner {
+  width: 100%;
+  min-height: 44px;
+  border-radius: 14px;
+  border: none;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 10px 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.install-steps-box {
+  background: var(--card);
+  border: 1px solid var(--accent);
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 12px;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+/* Cards & Common Containers */
+.main-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+  margin-bottom: 14px;
+}
+.sec-heading {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--ink);
+  margin: 16px 2px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-heading {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--accent);
+  margin: 0 0 12px;
+}
+
+/* HOME TAB */
+.home-hero-card {
+  background: linear-gradient(145deg, var(--card), var(--bg));
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 18px 16px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+}
+.today-block {
+  text-align: center;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+.today-label {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--mute);
+}
+.today-val {
+  font-size: 44px;
+  font-weight: 800;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+  margin-top: 4px;
+}
+.today-sub {
+  font-size: 12.5px;
+  color: var(--mute);
+  margin-top: 2px;
+}
+.lifetime-block {
+  padding-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.lifetime-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.lifetime-sub {
+  font-size: 12px;
+  color: var(--mute);
+}
+.lifetime-val {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.goal-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.02);
+}
+.goal-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.goal-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--accent);
+}
+.goal-naam-badge {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  white-space: nowrap;
+}
+.goal-meta-line {
+  font-size: 12.5px;
+  color: var(--mute);
+  margin-bottom: 8px;
+  font-variant-numeric: tabular-nums;
+}
+.goal-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  gap: 8px;
+}
+
+/* MY JAP TAB - SESSION DROPDOWN */
+.session-select-wrap {
+  margin-bottom: 12px;
+  position: relative;
+}
+.session-dropdown {
+  width: 100%;
+  min-height: 44px;
+  border-radius: 12px;
+  border: 1px solid var(--accent);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 700;
+  padding: 8px 36px 8px 14px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+.session-select-caret {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--accent);
+  font-size: 14px;
+}
+
+.session-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--accent);
+  text-align: center;
+  margin: 2px 0 4px;
+  word-break: break-word;
+}
+.sub-line {
+  font-size: 13px;
+  color: var(--mute);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 6px;
+}
+.big-count {
+  font-size: 48px;
+  font-weight: 800;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  margin: 4px 0 12px;
+}
+
+/* Progress */
+.prog-track {
+  height: 10px;
+  border-radius: 6px;
+  background: var(--line);
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+.prog-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  transition: width 0.15s ease-out;
+}
+.prog-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12.5px;
+  color: var(--mute);
+  font-variant-numeric: tabular-nums;
+}
+.target-done-msg {
+  text-align: center;
+  color: var(--ok);
+  font-size: 13.5px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+/* TAP Button Area */
+.tap-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 18px 0 16px;
+}
+.tap-btn {
+  width: min(70vw, 250px);
+  height: min(70vw, 250px);
+  position: relative;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 60ms ease;
+  touch-action: manipulation;
+  overflow: hidden;
+}
+.tap-btn.pressed {
+  transform: scale(0.95);
+}
+.tap-btn.style-classic {
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--accent2), var(--accent));
+  box-shadow: 0 10px 28px rgba(0,0,0,0.22);
+}
+.tap-btn.style-classic::after {
+  content: "";
+  position: absolute;
+  top: -10%;
+  bottom: -10%;
+  left: 0;
+  width: 45%;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.38) 50%, rgba(255,255,255,0) 100%);
+  transform: translateX(-140%) skewX(-22deg);
+  animation: glossSweep 2.8s ease-in-out infinite;
+  pointer-events: none;
+}
+.tap-btn.style-mala, .tap-btn.style-rud {
+  border-radius: 50%;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.12);
+}
+.tap-btn.style-jyoti, .tap-btn.style-bub {
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  background: radial-gradient(circle, var(--card), var(--bg));
+  box-shadow: 0 10px 28px rgba(0,0,0,0.18);
+}
+.tap-btn.style-flow {
+  border-radius: 26px;
+  border: 3px solid var(--accent);
+  background: linear-gradient(180deg, var(--card), var(--bg));
+  box-shadow: 0 10px 28px rgba(0,0,0,0.18);
+}
+.tap-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.tap-label {
+  position: absolute;
+  pointer-events: none;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  overflow: hidden;
+}
+.style-classic .tap-label {
+  color: #fff;
+  font-size: 22px;
+}
+.style-mala .tap-label, .style-rud .tap-label {
+  background: linear-gradient(105deg, var(--accent), var(--accent2), var(--accent));
+  background-size: 220% 100%;
+  animation: shimmerBg 2.8s linear infinite;
+  color: #fff;
+  border-radius: 22px;
+  padding: 7px 18px;
+  font-size: 15px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+.style-jyoti .tap-label, .style-flow .tap-label, .style-bub .tap-label {
+  bottom: 14px;
+  background: linear-gradient(105deg, var(--accent), var(--accent2), var(--accent));
+  background-size: 220% 100%;
+  animation: shimmerBg 2.8s linear infinite;
+  color: #fff;
+  border-radius: 22px;
+  padding: 7px 18px;
+  font-size: 14px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+.style-mala .tap-label::after, .style-rud .tap-label::after,
+.style-jyoti .tap-label::after, .style-flow .tap-label::after, .style-bub .tap-label::after {
+  content: "";
+  position: absolute;
+  top: -10%;
+  bottom: -10%;
+  left: 0;
+  width: 48%;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.48) 50%, rgba(255,255,255,0) 100%);
+  transform: translateX(-140%) skewX(-22deg);
+  animation: glossSweep 2.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Auto Jap */
+.auto-toggle-btn {
+  width: 100%;
+  min-height: 44px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.auto-hint-line {
+  font-size: 12px;
+  color: var(--mute);
+  text-align: center;
+  margin-top: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.auto-panel {
+  margin-top: 10px;
+  border: 1px solid var(--accent);
+  background: var(--bg);
+  border-radius: 14px;
+  padding: 12px;
+}
+.timer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.timer-title {
+  font-weight: 700;
+  font-size: 14.5px;
+}
+
+/* Custom Timer Switch */
+.tm-switch {
+  width: 48px;
+  height: 26px;
+  border-radius: 20px;
+  border: 2px solid var(--danger);
+  background: linear-gradient(90deg, var(--ok), var(--ok)) no-repeat left center;
+  background-size: 0% 100%;
+  transition: background-size 0.4s ease, border-color 0.4s ease;
+  position: relative;
+  cursor: pointer;
+  padding: 0;
+}
+.tm-switch.on {
+  border-color: var(--ok);
+  background-size: 100% 100%;
+}
+.tm-knob {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--danger);
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.4s ease, background-color 0.4s ease;
+}
+.tm-switch.on .tm-knob {
+  transform: translateX(22px);
+  background: #ffffff;
+}
+
+.timer-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+}
+.step-btn {
+  width: 58px;
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.step-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.timer-box {
+  flex: 1;
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.timer-box.dimmed {
+  opacity: 0.5;
+}
+.auto-ctrl-row {
+  display: flex;
+  gap: 8px;
+}
+.primary-btn {
+  width: 100%;
+  min-height: 44px;
+  border-radius: 12px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.secondary-btn {
+  min-height: 44px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 0 14px;
+  cursor: pointer;
+}
+
+/* Speed Section */
+.speed-sec {
+  border-top: 1px solid var(--line);
+  margin-top: 12px;
+  padding-top: 12px;
+}
+.speed-label {
+  font-size: 13.5px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.speed-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.speed-step {
+  width: 56px;
+  height: 42px;
+}
+.speed-input {
+  flex: 1;
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.preset-grid-3x2 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.chip {
+  min-height: 40px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.chip.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* Custom Div Slider */
+.custom-slider-wrap {
+  padding: 6px 2px;
+}
+.custom-slider-track {
+  height: 6px;
+  background: var(--line);
+  border-radius: 4px;
+  position: relative;
+  margin: 14px 16px 8px;
+}
+.custom-slider-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 4px;
+  width: 0%;
+}
+.custom-slider-thumb {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid var(--card);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.28);
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  transform: translate(-50%, -50%);
+  cursor: grab;
+  touch-action: none;
+}
+.custom-slider-thumb:active {
+  cursor: grabbing;
+}
+.slider-scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: var(--mute);
+  padding: 0 4px;
+}
+
+/* Action Row */
+.action-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 14px;
+}
+.act-btn {
+  min-height: 42px;
+  border-radius: 12px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 6px 8px;
+}
+.act-undo {
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+.act-edit {
+  color: var(--ink);
+  border: 1px solid var(--line);
+  background: var(--bg);
+}
+.act-reset {
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+}
+
+/* Inline Panels & Inputs */
+.inline-panel {
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 14px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+}
+.field-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 12px 0 6px;
+}
+.field-label:first-child {
+  margin-top: 0;
+}
+.text-input, .area-input {
+  width: 100%;
+  min-height: 42px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  padding: 8px 12px;
+  font-size: 14.5px;
+}
+.area-input {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* SCHEDULE TAB CALCULATOR RESULTS */
+.calc-grid-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.calc-results-box {
+  margin-top: 14px;
+  background: var(--bg);
+  border: 1px solid var(--accent);
+  border-radius: 14px;
+  padding: 12px;
+}
+.calc-res-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--line);
+  font-size: 13.5px;
+}
+.calc-res-row:last-child {
+  border-bottom: none;
+}
+.calc-res-val {
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+/* HISTORY TAB 7-DAY BAR CHART */
+.chart-7d-wrap {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  align-items: end;
+  height: 180px;
+  padding: 22px 4px 6px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 10px;
+}
+.bar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+}
+.bar-val-top {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--mute);
+  margin-bottom: 4px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.bar-track {
+  width: 100%;
+  max-width: 30px;
+  height: 118px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+.bar-fill {
+  width: 100%;
+  height: 0%;
+  background: linear-gradient(180deg, var(--accent2), var(--accent));
+  border-radius: 6px 6px 0 0;
+  transition: height 0.78s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.bar-day-lbl {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-top: 6px;
+}
+.bar-col.is-today .bar-day-lbl {
+  color: var(--accent);
+}
+.hist-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 12px;
+  border-radius: 12px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  margin-bottom: 8px;
+}
+.hist-date {
+  font-weight: 700;
+  font-size: 14px;
+}
+.hist-sub {
+  font-size: 12px;
+  color: var(--mute);
+}
+.hist-cnt {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+/* BOTTOM NAVIGATION BAR */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--card);
+  border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  z-index: 18;
+  box-shadow: 0 -4px 18px rgba(0,0,0,0.06);
+}
+.bottom-nav-inner {
+  max-width: 480px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  height: 64px;
+  padding: 4px 6px;
+  gap: 4px;
+}
+.nav-tab {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  color: var(--mute);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  cursor: pointer;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 4px;
+  transition: all 0.2s ease;
+}
+.nav-tab .nav-ico {
+  font-size: 18px;
+  line-height: 1;
+}
+.nav-tab.active {
+  color: #fff;
+}
+
+/* Theme Picker 2-Column Grid */
+.theme-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin: 8px 0;
+}
+.theme-card-btn {
+  min-height: 48px;
+  border-radius: 14px;
+  font-size: 13.5px;
+  font-weight: 700;
+  padding: 8px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: transform 0.12s ease, box-shadow 0.15s ease;
+  position: relative;
+}
+.theme-card-btn.selected {
+  outline: 3px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* Drawers (Left Menu & Right Settings Drawer) */
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.48);
+  z-index: 25;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.drawer-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.drawer {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: min(88vw, 360px);
+  background: var(--card);
+  z-index: 26;
+  box-shadow: 6px 0 28px rgba(0,0,0,0.25);
+  transform: translateX(-102%);
+  transition: transform 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+  display: flex;
+  flex-direction: column;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.drawer.open {
+  transform: translateX(0);
+}
+.drawer-right {
+  left: auto;
+  right: 0;
+  width: min(92vw, 380px);
+  box-shadow: -6px 0 28px rgba(0,0,0,0.25);
+  transform: translateX(102%);
+}
+.drawer-right.open {
+  transform: translateX(0);
+}
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+}
+.drawer-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent);
+}
+.drawer-list {
+  flex: 1;
+  overflow-y: auto;
+}
+.menu-item {
+  border-bottom: 1px solid var(--line);
+  transition: opacity 0.2s ease, filter 0.2s ease;
+}
+.drawer-list.has-open .menu-item:not(.open) {
+  opacity: 0.42;
+  filter: blur(1.3px);
+}
+.menu-row {
+  width: 100%;
+  padding: 15px 16px;
+  background: transparent;
+  border: none;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  text-align: left;
+}
+.menu-chevron {
+  transition: transform 0.2s ease;
+  font-size: 14px;
+  opacity: 0.75;
+}
+.menu-item.open > .menu-row .menu-chevron {
+  transform: rotate(90deg);
+  opacity: 1;
+}
+.menu-body {
+  display: none;
+  margin: 8px 12px 12px;
+  padding: 12px;
+  background: var(--bg);
+  border: 1px solid var(--accent);
+  border-radius: 14px;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
+}
+.menu-item.open > .menu-body {
+  display: block;
+}
+
+.chips-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0;
+}
+.sess-item {
+  padding: 10px;
+  border-radius: 12px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.sess-info {
+  min-width: 0;
+  flex: 1;
+}
+.sess-title {
+  font-weight: 700;
+  font-size: 14.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sess-title.active {
+  color: var(--accent);
+}
+.sess-sub {
+  font-size: 12px;
+  color: var(--mute);
+  font-variant-numeric: tabular-nums;
+}
+.sess-actions {
+  display: flex;
+  gap: 6px;
+}
+.small-btn {
+  min-height: 40px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.small-btn.del {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+/* Exit Overlay */
+.exit-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 50;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+}
+.exit-screen.show {
+  display: flex;
+}
+
+.hint-text {
+  font-size: 12.5px;
+  color: var(--mute);
+  line-height: 1.45;
+  margin: 6px 0;
+}
+.hidden {
+  display: none !important;
+}
+</style>
+</head>
+<body>
+
+<div class="app-wrap" id="swipe-area">
+  <!-- Header -->
+  <header class="header">
+    <button class="icon-btn" id="btn-menu" aria-label="Menu">☰</button>
+    <h1 class="app-title" id="ui-title">🙏 Naam Counter</h1>
+    <button class="icon-btn" id="btn-settings-top" aria-label="Settings">⚙️</button>
+  </header>
+
+  <!-- Install Banner (Always Shimmering) -->
+  <button class="install-banner shimmer-fill hidden" id="btn-install-banner">📲 Install app</button>
+  <div class="install-steps-box hidden" id="box-install-steps">
+    <div id="ui-inst-steps"></div>
+    <div style="margin-top:10px;display:flex;gap:8px;">
+      <button class="secondary-btn" id="btn-copy-link-top" style="flex:1;"></button>
+      <button class="secondary-btn" id="btn-close-inst-top">✕</button>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       VIEW 1: HOME TAB
+       ========================================== -->
+  <section id="view-home" class="tab-view">
+    <div class="home-hero-card">
+      <div class="today-block">
+        <div class="today-label" id="ui-home-today-lbl">Today</div>
+        <div class="today-val" id="ui-home-today-val">0</div>
+        <div class="today-sub" id="ui-home-today-sub">Malas today: 0</div>
+      </div>
+      <div class="lifetime-block">
+        <div>
+          <div class="lifetime-label" id="ui-home-life-lbl">Lifetime</div>
+          <div class="lifetime-sub" id="ui-home-life-sub">Total Naam Jap Progress</div>
+        </div>
+        <div class="lifetime-val" id="ui-home-life-val">0</div>
+      </div>
+    </div>
+
+    <div class="sec-heading">
+      <span id="ui-home-goals-title">🎯 Goal-Based Jap</span>
+      <button class="small-btn shimmer-fill" id="btn-home-new-goal">+ Create Goal</button>
+    </div>
+    <div id="home-goals-list"></div>
+  </section>
+
+  <!-- ==========================================
+       VIEW 2: MY JAP TAB (Main Counter Interface)
+       ========================================== -->
+  <section id="view-jap" class="tab-view hidden">
+    <main class="main-card">
+      <!-- Top Session / Challenge Dropdown Selector -->
+      <div class="session-select-wrap">
+        <select class="session-dropdown" id="sel-active-session" aria-label="Select active session"></select>
+        <span class="session-select-caret">▾</span>
+      </div>
+
+      <div class="session-name" id="ui-sess-name">OM Namah Shivaya</div>
+      <div class="sub-line" id="ui-sub-line">Malas of 108: 0 · Beads: 0</div>
+      <div class="big-count" id="ui-big-count">0</div>
+
+      <div class="prog-track">
+        <div class="prog-fill" id="ui-prog-fill"></div>
+      </div>
+      <div class="prog-meta">
+        <span id="ui-prog-pct">0.0%</span>
+        <span id="ui-prog-target">Target 1,080</span>
+      </div>
+      <div class="target-done-msg hidden" id="ui-target-done"></div>
+
+      <!-- TAP Button (with periodic shimmer sweep) -->
+      <div class="tap-wrap">
+        <button class="tap-btn style-bub" id="btn-tap">
+          <svg class="tap-svg" id="tap-svg" viewBox="0 0 260 270" aria-hidden="true"></svg>
+          <span class="tap-label" id="ui-tap-label">TAP</span>
+        </button>
+      </div>
+
+      <!-- Auto Jap Button -->
+      <button class="auto-toggle-btn" id="btn-auto-toggle">
+        <span id="ui-auto-btn-txt">▶ Auto Jap</span>
+        <span id="ui-auto-caret">▾</span>
+      </button>
+      <div class="auto-hint-line" id="ui-auto-hint-line"></div>
+
+      <!-- Auto Jap Panel -->
+      <div class="auto-panel hidden" id="panel-auto">
+        <div class="timer-head">
+          <span class="timer-title" id="ui-tm-sec">⏱ Chant timer</span>
+          <button class="tm-switch" id="btn-tm-switch" role="switch" aria-checked="false">
+            <span class="tm-knob"></span>
+          </button>
+        </div>
+        <div class="hint-text" id="ui-tm-hint2"></div>
+
+        <div class="timer-row">
+          <button class="step-btn" id="btn-tm-minus">−</button>
+          <div class="timer-box dimmed" id="ui-tm-display">⏱ 05:00</div>
+          <button class="step-btn" id="btn-tm-plus">+</button>
+        </div>
+
+        <div class="target-done-msg hidden" id="ui-tm-done" style="margin-bottom:8px;"></div>
+
+        <div class="auto-ctrl-row">
+          <button class="primary-btn shimmer-fill" id="btn-auto-start">▶ Start</button>
+          <button class="secondary-btn hidden" id="btn-auto-stop">■ Stop</button>
+        </div>
+
+        <!-- Speed Section inside Auto Panel -->
+        <div class="speed-sec">
+          <div class="speed-label" id="ui-gap-label-main">⚡ Adjust speed (seconds per naam)</div>
+          <div id="speed-mount-main"></div>
+        </div>
+      </div>
+
+      <!-- Action Row -->
+      <div class="action-row">
+        <button class="act-btn act-undo" id="btn-undo">↶ Undo</button>
+        <button class="act-btn act-edit" id="btn-edit">✎ Edit</button>
+        <button class="act-btn act-reset" id="btn-reset">↺ Reset</button>
+      </div>
+
+      <!-- Inline Edit Panel -->
+      <div class="inline-panel hidden" id="panel-edit">
+        <label class="field-label" id="ui-lbl-name" for="inp-edit-name">Name</label>
+        <input type="text" class="text-input" id="inp-edit-name" maxlength="60">
+
+        <label class="field-label" id="ui-lbl-target" for="inp-edit-target">Target</label>
+        <input type="number" class="text-input" id="inp-edit-target" min="0" max="1000000000000">
+
+        <label class="field-label" id="ui-lbl-setc" for="inp-edit-count">Set count to (optional)</label>
+        <input type="number" class="text-input" id="inp-edit-count" min="0" max="1000000000000">
+
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="secondary-btn" id="btn-edit-cancel" style="flex:1;">Cancel</button>
+          <button class="primary-btn shimmer-fill" id="btn-edit-save" style="flex:1;">Save</button>
+        </div>
+      </div>
+    </main>
+  </section>
+
+  <!-- ==========================================
+       VIEW 3: SCHEDULE TAB (Calculator + Create Goal)
+       ========================================== -->
+  <section id="view-schedule" class="tab-view hidden">
+    <!-- Card 1: Naam Jap Calculator -->
+    <div class="main-card">
+      <h2 class="card-heading" id="ui-calc-heading">🧮 Naam Jap Calculator</h2>
+      <div class="hint-text" id="ui-calc-sub" style="margin-top:-6px;margin-bottom:10px;">
+        Calculate how much Naam Jap you can do and how many days are needed to complete your goal.
+      </div>
+
+      <label class="field-label" id="ui-calc-goal-lbl" for="inp-calc-goal">Target Goal Count</label>
+      <input type="number" class="text-input" id="inp-calc-goal" value="100000" min="1" max="1000000000000">
+
+      <div class="calc-grid-inputs">
+        <div>
+          <label class="field-label" id="ui-calc-sec-lbl" for="inp-calc-sec">Seconds per Count</label>
+          <input type="number" class="text-input" id="inp-calc-sec" value="0.8" step="0.1" min="0.2" max="60">
+        </div>
+        <div>
+          <label class="field-label" id="ui-calc-hrs-lbl" for="inp-calc-hrs">Hours per Day</label>
+          <input type="number" class="text-input" id="inp-calc-hrs" value="1" step="0.5" min="0.1" max="24">
+        </div>
+      </div>
+
+      <div class="calc-results-box">
+        <div class="calc-res-row">
+          <span id="ui-res-total-lbl">Total Naam Count</span>
+          <span class="calc-res-val" id="ui-res-total-val">1,00,000</span>
+        </div>
+        <div class="calc-res-row">
+          <span id="ui-res-daily-lbl">Naam Jap per Day</span>
+          <span class="calc-res-val" id="ui-res-daily-val">4,500</span>
+        </div>
+        <div class="calc-res-row">
+          <span id="ui-res-days-lbl">Total Days Needed</span>
+          <span class="calc-res-val" id="ui-res-days-val">23 Days</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: Create Goal Challenge -->
+    <div class="main-card" id="card-create-goal">
+      <h2 class="card-heading" id="ui-cg-heading">✨ Create Goal</h2>
+
+      <label class="field-label" id="ui-cg-title-lbl" for="inp-cg-title">Challenge Name (shown on Home)</label>
+      <input type="text" class="text-input" id="inp-cg-title" maxlength="60" placeholder="e.g. 1,00,000 Naam Jap Challenge">
+
+      <div class="field-label" id="ui-cg-count-lbl">Choose Goal Count</div>
+      <div class="chips-wrap" id="cg-goal-chips"></div>
+      <input type="number" class="text-input hidden" id="inp-cg-custom-goal" placeholder="Enter custom goal count" min="1" max="1000000000000" style="margin-top:6px;">
+
+      <div class="field-label" id="ui-cg-hrs-lbl">Hours per Day (0.5 = 30 mins)</div>
+      <div class="chips-wrap" id="cg-hrs-chips"></div>
+      <input type="number" class="text-input hidden" id="inp-cg-custom-hrs" placeholder="e.g. 0.5, 1.5, 4" step="0.5" min="0.1" max="24" style="margin-top:6px;">
+
+      <div class="field-label" id="ui-cg-naam-lbl">Which Naam do you want to chant?</div>
+      <div class="chips-wrap" id="cg-naam-chips"></div>
+      <input type="text" class="text-input hidden" id="inp-cg-custom-naam" maxlength="60" placeholder="Type custom Naam" style="margin-top:6px;">
+
+      <button class="primary-btn shimmer-fill" id="btn-create-goal-submit" style="margin-top:16px;font-size:16px;">
+        🚀 Create Goal
+      </button>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       VIEW 4: HISTORY TAB (Animated 7-Day Chart & List)
+       ========================================== -->
+  <section id="view-history" class="tab-view hidden">
+    <div class="main-card">
+      <h2 class="card-heading" id="ui-hist-chart-title">📊 Live 7-Day Progress Tracker</h2>
+      <div class="chart-7d-wrap" id="hist-7d-chart"></div>
+      <div class="hint-text" id="ui-hist-chart-sub" style="text-align:center;">
+        Daily Naam Jap count for the last 7 days
+      </div>
+    </div>
+
+    <div class="main-card">
+      <h2 class="card-heading" id="ui-hist-list-title">🗓 Last 7 Days Record</h2>
+      <div id="hist-7d-list"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ==========================================
+     BOTTOM 4-TAB BAR
+     ========================================== -->
+<nav class="bottom-nav" aria-label="Primary Navigation">
+  <div class="bottom-nav-inner">
+    <button class="nav-tab shimmer-fill active" data-tab="home" id="nav-btn-home">
+      <span class="nav-ico">🏠</span>
+      <span id="ui-nav-home">Home</span>
+    </button>
+    <button class="nav-tab" data-tab="jap" id="nav-btn-jap">
+      <span class="nav-ico">📿</span>
+      <span id="ui-nav-jap">My Jap</span>
+    </button>
+    <button class="nav-tab" data-tab="schedule" id="nav-btn-schedule">
+      <span class="nav-ico">📅</span>
+      <span id="ui-nav-schedule">Schedule</span>
+    </button>
+    <button class="nav-tab" data-tab="history" id="nav-btn-history">
+      <span class="nav-ico">📊</span>
+      <span id="ui-nav-history">History</span>
+    </button>
+  </div>
+</nav>
+
+<!-- Hidden File Inputs for Custom Browse Audio -->
+<input type="file" id="file-custom-naam-snd" accept="audio/*" class="hidden">
+<input type="file" id="file-custom-108-snd" accept="audio/*" class="hidden">
+
+<!-- ==========================================
+     LEFT DRAWER MENU (Strictly 6 Core Items)
+     ========================================== -->
+<div class="drawer-overlay" id="drawer-overlay"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-header">
+    <span class="drawer-title" id="ui-menu-title">Menu</span>
+    <button class="icon-btn" id="btn-drawer-close" style="width:40px;height:40px;">✕</button>
+  </div>
+  <div class="drawer-list" id="drawer-list">
+    <!-- 1. Old counts / sessions -->
+    <div class="menu-item" data-acc="old">
+      <button class="menu-row"><span id="m-txt-old">📂 Old counts / sessions</span><span class="menu-chevron">▸</span></button>
+      <div class="menu-body" id="old-sessions-list"></div>
+    </div>
+
+    <!-- 2. Backup code -->
+    <div class="menu-item" data-acc="bk">
+      <button class="menu-row"><span id="m-txt-bk">💾 Backup code</span><span class="menu-chevron">▸</span></button>
+      <div class="menu-body">
+        <div class="hint-text" id="ui-bkh"></div>
+        <button class="primary-btn shimmer-fill" id="btn-create-bk" style="margin:8px 0;"></button>
+        <textarea class="area-input" id="txt-bk-out" readonly></textarea>
+        <div class="hint-text" id="ui-bk-msg" style="color:var(--ok);font-weight:600;"></div>
+      </div>
+    </div>
+
+    <!-- 3. Restore data -->
+    <div class="menu-item" data-acc="rs">
+      <button class="menu-row"><span id="m-txt-rs">📥 Restore data</span><span class="menu-chevron">▸</span></button>
+      <div class="menu-body">
+        <div class="hint-text" id="ui-rsh"></div>
+        <textarea class="area-input" id="txt-rs-in" style="margin:8px 0;"></textarea>
+        <button class="primary-btn shimmer-fill" id="btn-do-restore"></button>
+        <div class="hint-text" id="ui-rs-msg" style="font-weight:700;margin-top:8px;"></div>
+      </div>
+    </div>
+
+    <!-- 4. Add to Home screen -->
+    <div class="menu-item" data-acc="in" id="menu-item-install">
+      <button class="menu-row"><span id="m-txt-in">📲 Add to Home screen</span><span class="menu-chevron">▸</span></button>
+      <div class="menu-body">
+        <button class="primary-btn shimmer-fill" id="btn-menu-install" style="margin-bottom:10px;"></button>
+        <div class="hint-text" id="ui-menu-inst-steps"></div>
+        <button class="secondary-btn" id="btn-menu-copy-link" style="width:100%;margin-top:8px;"></button>
+      </div>
+    </div>
+
+    <!-- 5. Share app (Direct row) -->
+    <div class="menu-item">
+      <button class="menu-row" id="btn-menu-share">
+        <span id="m-txt-sh">📤 Share app</span>
+        <span id="ui-share-feedback" style="font-size:12.5px;color:var(--ok);"></span>
+      </button>
+    </div>
+
+    <!-- 6. Exit app -->
+    <div class="menu-item" data-acc="ex">
+      <button class="menu-row"><span id="m-txt-ex">🚪 Exit app</span><span class="menu-chevron">▸</span></button>
+      <div class="menu-body">
+        <div style="font-weight:700;margin-bottom:10px;" id="ui-exq">Close the app?</div>
+        <div style="display:flex;gap:8px;">
+          <button class="secondary-btn" id="btn-exit-stay" style="flex:1;">Stay</button>
+          <button class="primary-btn" id="btn-exit-confirm" style="flex:1;background:var(--danger);">Exit app</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ==========================================
+     RIGHT SETTINGS DRAWER (⚙️ Top-Right)
+     ========================================== -->
+<div class="drawer-overlay" id="settings-overlay"></div>
+<aside class="drawer drawer-right" id="settings-drawer">
+  <div class="drawer-header">
+    <span class="drawer-title" id="ui-set-title">⚙️ Settings</span>
+    <button class="icon-btn" id="btn-settings-close" style="width:40px;height:40px;">✕</button>
+  </div>
+  <div class="drawer-list" id="settings-list">
+    <!-- 1. Language Direct Row -->
+    <div class="menu-item">
+      <button class="menu-row" id="btn-set-lang">
+        <span id="ui-set-lang-lbl">🌐 Language</span>
+        <span class="chip shimmer-fill" id="ui-set-lang-val" style="min-height:34px;padding:4px 14px;">हिन्दी</span>
+      </button>
+    </div>
+
+    <!-- 2. Sound, Vibration & Change Sounds Accordion -->
+    <div class="menu-item open" data-set-acc="snd">
+      <button class="menu-row shimmer-fill"><span id="ui-set-snd-tab">🔊 Sound & Vibration</span><span class="menu-chevron">▸</span></button>
+      <div class="menu-body">
+        <div class="chips-wrap" style="margin-bottom:12px;">
+          <button class="chip" id="chip-toggle-snd">🔊 Sound</button>
+          <button class="chip" id="chip-toggle-vib">📳 Vibrate</button>
+          <button class="chip" id="chip-toggle-wake">☀ Screen on</button>
+        </div>
+        <div class="hint-text hidden" id="ui-vib-hint"></div>
+
+        <div class="field-label" id="ui-sg-c" style="border-top:1px solid var(--line);padding-top:10px;">📿 Naam Tap Sound</div>
+        <div class="chips-wrap" id="snd-chips-c"></div>
+
+        <div class="field-label" id="ui-sg-m" style="border-top:1px solid var(--line);padding-top:10px;">🔔 108 Mala Complete Sound</div>
+        <div class="chips-wrap" id="snd-chips-m"></div>
+
+        <div class="field-label" id="ui-sg-b" style="border-top:1px solid var(--line);padding-top:10px;">🔘 Button Tap Sound</div>
+        <div class="chips-wrap" id="snd-chips-b"></div>
+      </div>
+    </div>
+
+    <!-- 3. Theme & Counter Style Accordion -->
+    <div class="menu-item" data-set-acc="theme">
+      <button class="menu-row"><span id="ui-set-th-tab">🎨 Theme & Style</span><span class="menu-chevron">▸</span></button>
+      <div class="menu-body">
+        <div class="field-label" id="ui-th-colors">Theme</div>
+        <div class="theme-cards-grid" id="theme-color-cards"></div>
+
+        <div class="field-label" id="ui-th-style" style="margin-top:14px;">Counter Artwork Style</div>
+        <div class="chips-wrap" id="theme-style-chips"></div>
+      </div>
+    </div>
+
+    <!-- 4. Counter Speed Accordion -->
+    <div class="menu-item" data-set-acc="speed">
+      <button class="menu-row"><span id="ui-set-spd-tab">⚡ Counter Speed</span><span class="menu-chevron">▸</span></button>
+      <div class="menu-body">
+        <div class="speed-label" id="ui-gap-label-settings">⚡ Adjust speed (seconds per naam)</div>
+        <div id="speed-mount-settings"></div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- Full-screen Exit Thank-You Page -->
+<div class="exit-screen" id="exit-screen">
+  <div style="font-size:46px;margin-bottom:12px;">🙏</div>
+  <h2 id="ui-byet" style="margin:0 0 8px;color:var(--accent);">Thank you!</h2>
+  <p id="ui-byes" style="color:var(--mute);max-width:300px;margin:0 0 20px;line-height:1.5;"></p>
+  <button class="primary-btn shimmer-fill" id="btn-back-to-app" style="max-width:220px;">Back to app</button>
+</div>
+
+<script>
+(function() {
+  "use strict";
+
+  /* UI Strings - English & Hindi */
+  var STRINGS = {
+    en: {
+      title: "🙏 Naam Counter",
+      nav_home: "Home",
+      nav_jap: "My Jap",
+      nav_sched: "Schedule",
+      nav_hist: "History",
+      today_lbl: "Today",
+      malas_today: "Malas today",
+      life_lbl: "Lifetime",
+      life_sub: "Lifetime Naam Jap Progress",
+      goals_title: "🎯 Goal-Based Jap",
+      btn_new_goal: "+ Create Goal",
+      chant_now: "📿 Chant Now",
+      days_est: "Est. {d} days ({h}h/day)",
+      no_goals: "No goals started yet. Tap '+ Create Goal' to start a 1,000 or 1 Lakh Naam Jap challenge!",
+      calc_heading: "🧮 Naam Jap Calculator",
+      calc_sub: "Calculate how much Naam Jap you can do and how many days are needed to complete your goal.",
+      calc_goal_lbl: "Target Goal Count",
+      calc_sec_lbl: "Seconds per Count",
+      calc_hrs_lbl: "Hours per Day",
+      res_total_lbl: "Total Naam Count",
+      res_daily_lbl: "Naam Jap Required / Day",
+      res_days_lbl: "Total Days Needed",
+      days_word: "Days",
+      cg_heading: "✨ Create Goal",
+      cg_title_lbl: "Challenge Name (shown on Home)",
+      cg_title_ph: "e.g. 1000 Naam Jap Challenge",
+      cg_count_lbl: "Choose Goal Count",
+      cg_hrs_lbl: "Hours per Day (0.5 = 30 mins)",
+      cg_naam_lbl: "Which Naam do you want to chant?",
+      cg_submit: "🚀 Create Goal",
+      manual_edit: "✎ Manual Edit",
+      hist_chart_title: "📊 Live 7-Day Progress Tracker",
+      hist_chart_sub: "Daily Naam Jap count for the last 7 days (Swipe left/right to switch tabs)",
+      hist_list_title: "🗓 Last 7 Days Record",
+      set_title: "⚙️ Settings",
+      set_snd_tab: "🔊 Sound & Vibration",
+      set_th_tab: "🎨 Theme & Counter Style",
+      set_spd_tab: "⚡ Counter Speed",
+      browse_snd: "📂 Browse Audio...",
+      custom_snd_active: "🎵 Custom Sound",
+      challenge_suffix: "Naam Jap Challenge",
+      m_sh: "📤 Share app",
+      menu: "Menu",
+      tap: "TAP",
+      undo: "↶ Undo",
+      edit: "✎ Edit",
+      reset: "↺ Reset",
+      rconf: "Tap again to confirm",
+      name: "Name",
+      tlabel: "Target (any number, or leave empty for no target)",
+      setc: "Set count to (optional)",
+      tph: "e.g. 5000, 125000, 2500000",
+      cph: "Current count",
+      cancel: "Cancel",
+      save: "Save",
+      vib: "📳 Vibrate",
+      snd: "🔊 Sound",
+      wake: "☀ Screen on",
+      open: "Open",
+      conf: "Confirm?",
+      target: "Target",
+      notarget: "No target",
+      done: "🙏 Target complete! (keep tapping to go beyond)",
+      mala: "Malas of 108",
+      beads: "Beads",
+      defname: "OM Namah Shivaya",
+      lang: "हिन्दी",
+      inst2: "📲 Install app",
+      tdone: "⏱ Time complete! 🙏",
+      nosnd: "🔇 No sound",
+      auto: "▶ Auto Jap",
+      bst: "▶ Start",
+      bpa: "⏸ Pause",
+      bsp: "■ Stop",
+      bres: "▶ Resume",
+      tm_sec: "⏱ Chant timer",
+      tm_hint2: "Turn the switch on to set the time with − and + (1–60 min). Start runs Auto Jap together with the countdown.",
+      gap: "⚡ Adjust speed (seconds per naam)",
+      autohint: "Auto mode: 1 count every {g} seconds. Screen stays on.",
+      m_old: "📂 Old counts / sessions",
+      m_bk: "💾 Backup code",
+      m_lang: "🌐 Language",
+      m_rs: "📥 Restore data",
+      m_in: "📲 Add to Home screen",
+      m_ex: "🚪 Exit app",
+      th_colors: "Select Theme",
+      th_style: "Counter Style",
+      s_classic: "Classic",
+      s_mala: "Mala Beads",
+      s_rud: "Rudraksha",
+      s_jyoti: "Jyoti (Diya)",
+      s_flow: "Flow Grid",
+      s_bub: "Bubbles",
+      sg_c: "📿 Naam Tap Sound",
+      sg_b: "🔘 Button Tap Sound",
+      sg_m: "🔔 108 (Mala Complete) Sound",
+      bkh: "Backup makes a code with all your sessions and counts. Save it in WhatsApp or Notes. Use Restore to load it on any phone.",
+      bkb: "📋 Create backup code",
+      bkr: "📥 Restore",
+      bkph: "Your backup code appears here.",
+      bkph2: "Paste your backup code here",
+      rsh: "Paste your backup code below, then tap Restore. Sessions in the code are added to this app.",
+      bkok: "Backup code ready and copied ✓ Save it somewhere safe.",
+      bkman: "Backup code ready. Press and hold the box, choose Select all, then Copy.",
+      bkbad: "This code is not valid.",
+      bkdone: "Restored ✓ Sessions added: ",
+      bkempty: "Paste your backup code in the box first.",
+      iand: "<b>Android (Chrome):</b><br>1. Open this page in Chrome.<br>2. Tap the ⋮ menu (top right).<br>3. Tap \"Install app\" or \"Add to Home screen\".",
+      iios: "<b>iPhone (Safari):</b><br>1. Open this page in Safari.<br>2. Tap the Share button.<br>3. Tap \"Add to Home Screen\".",
+      copy: "Copy page link",
+      copied: "Link copied ✓",
+      exq: "Close the app?",
+      exy: "Exit app",
+      exn: "Stay",
+      byet: "🙏 Thank you!",
+      byes: "You can now close the app with your phone's Home or Back button.",
+      byeb: "Back to app",
+      novib: "Vibration isn't supported on this device/browser (e.g. iPhone). Turn on Sound for tap feedback."
+    },
+    hi: {
+      title: "🙏 नाम काउंटर",
+      nav_home: "होम",
+      nav_jap: "मेरा जाप",
+      nav_sched: "शेड्यूल",
+      nav_hist: "इतिहास",
+      today_lbl: "आज की गिनती",
+      malas_today: "आज की माला",
+      life_lbl: "कुल जीवनकाल (Lifetime)",
+      life_sub: "अब तक की कुल नाम जाप प्रगति",
+      goals_title: "🎯 लक्ष्य आधारित जाप (Goals)",
+      btn_new_goal: "+ नया लक्ष्य",
+      chant_now: "📿 जाप करें",
+      days_est: "अनुमानित {d} दिन ({h} घं/दिन)",
+      no_goals: "अभी कोई लक्ष्य शुरू नहीं किया गया है। नया चैलेंज शुरू करने के लिए '+ नया लक्ष्य' दबाएँ!",
+      calc_heading: "🧮 नाम जाप कैलकुलेटर",
+      calc_sub: "प्रति सेकंड गति और प्रतिदिन घंटों के आधार पर जानें कि आपका लक्ष्य कितने दिनों में पूरा होगा।",
+      calc_goal_lbl: "लक्ष्य गिनती (Goal Count)",
+      calc_sec_lbl: "प्रति नाम सेकंड",
+      calc_hrs_lbl: "प्रतिदिन घंटे",
+      res_total_lbl: "कुल नाम लक्ष्य",
+      res_daily_lbl: "प्रतिदिन आवश्यक जाप",
+      res_days_lbl: "लक्ष्य पूरा करने के कुल दिन",
+      days_word: "दिन",
+      cg_heading: "✨ नया लक्ष्य (Goal) बनाएँ",
+      cg_title_lbl: "चैलेंज का नाम (होम स्क्रीन पर दिखेगा)",
+      cg_title_ph: "जैसे: 1000 नाम जाप चैलेंज",
+      cg_count_lbl: "लक्ष्य संख्या चुनें",
+      cg_hrs_lbl: "प्रतिदिन घंटे (0.5 = 30 मिनट)",
+      cg_naam_lbl: "आप कौन सा नाम जपना चाहते हैं?",
+      cg_submit: "🚀 लक्ष्य शुरू करें",
+      manual_edit: "✎ खुद लिखें",
+      hist_chart_title: "📊 पिछले 7 दिनों का लाइव ग्राफ़",
+      hist_chart_sub: "पिछले 7 दिनों की प्रतिदिन नाम जाप प्रगति (टैब बदलने के लिए स्वाइप करें)",
+      hist_list_title: "🗓 पिछले 7 दिनों का रिकॉर्ड",
+      set_title: "⚙️ सेटिंग्स",
+      set_snd_tab: "🔊 आवाज़ और कंपन",
+      set_th_tab: "🎨 थीम और काउंटर स्टाइल",
+      set_spd_tab: "⚡ गिनती की गति (Speed)",
+      browse_snd: "📂 ऑडियो फ़ाइल चुनें...",
+      custom_snd_active: "🎵 कस्टम ऑडियो",
+      challenge_suffix: "नाम जाप चैलेंज",
+      m_sh: "📤 ऐप शेयर करें",
+      menu: "मेनू",
+      tap: "टैप करें",
+      undo: "↶ वापस",
+      edit: "✎ बदलें",
+      reset: "↺ रीसेट",
+      rconf: "पक्का? फिर दबाएँ",
+      name: "नाम",
+      tlabel: "लक्ष्य (कोई भी संख्या, या खाली छोड़ें)",
+      setc: "गिनती सीधे सेट करें (वैकल्पिक)",
+      tph: "जैसे 5000, 125000, 2500000",
+      cph: "वर्तमान गिनती",
+      cancel: "रद्द करें",
+      save: "सेव करें",
+      vib: "📳 कंपन",
+      snd: "🔊 आवाज़",
+      wake: "☀ स्क्रीन चालू",
+      open: "खोलें",
+      conf: "पक्का?",
+      target: "लक्ष्य",
+      notarget: "कोई लक्ष्य नहीं",
+      done: "🙏 लक्ष्य पूरा हुआ! (आगे भी गिन सकते हैं)",
+      mala: "माला (108)",
+      beads: "मनके",
+      defname: "ॐ नमः शिवाय",
+      lang: "English",
+      inst2: "📲 ऐप इंस्टॉल करें",
+      tdone: "⏱ समय पूरा हुआ! 🙏",
+      nosnd: "🔇 बिना आवाज़",
+      auto: "▶ ऑटो जाप",
+      bst: "▶ शुरू",
+      bpa: "⏸ पॉज़",
+      bsp: "■ रोकें",
+      bres: "▶ जारी रखें",
+      tm_sec: "⏱ जाप टाइमर",
+      tm_hint2: "टाइमर चालू करने के लिए स्विच दबाएँ, फिर − और + से समय (1–60 मिनट) सेट करें। शुरू दबाने पर ऑटो जाप और टाइमर साथ चलेंगे।",
+      gap: "⚡ गति सेट करें (प्रति नाम सेकंड)",
+      autohint: "ऑटो मोड: हर {g} सेकंड में 1 गिनती। स्क्रीन चालू रहेगी।",
+      m_old: "📂 पुरानी गिनती / सत्र",
+      m_bk: "💾 बैकअप कोड",
+      m_lang: "🌐 भाषा",
+      m_rs: "📥 डेटा रीस्टोर",
+      m_in: "📲 होम स्क्रीन पर जोड़ें",
+      m_ex: "🚪 ऐप बंद करें",
+      th_colors: "थीम चुनें",
+      th_style: "काउंटर स्टाइल",
+      s_classic: "क्लासिक",
+      s_mala: "माला मनके",
+      s_rud: "रुद्राक्ष",
+      s_jyoti: "ज्योति (दीपक)",
+      s_flow: "फ्लो ग्रिड",
+      s_bub: "बबल्स",
+      sg_c: "📿 नाम टैप की आवाज़",
+      sg_b: "🔘 बटन टैप की आवाज़",
+      sg_m: "🔔 108 (माला पूरी) की आवाज़",
+      bkh: "बैकअप से आपके सभी सत्र और गिनती का एक कोड बनता है। उसे WhatsApp या Notes में सेव करें।",
+      bkb: "📋 बैकअप कोड बनाएँ",
+      bkr: "📥 रीस्टोर",
+      bkph: "आपका बैकअप कोड यहाँ दिखेगा।",
+      bkph2: "अपना बैकअप कोड यहाँ पेस्ट करें",
+      rsh: "नीचे अपना बैकअप कोड पेस्ट करें और रीस्टोर दबाएँ।",
+      bkok: "बैकअप कोड तैयार और कॉपी हो गया ✓ इसे सुरक्षित जगह सेव करें।",
+      bkman: "बैकअप कोड तैयार है। बॉक्स को दबाए रखें, Select all चुनें, फिर Copy करें।",
+      bkbad: "यह कोड सही नहीं है।",
+      bkdone: "रीस्टोर हो गया ✓ जुड़े सत्र: ",
+      bkempty: "पहले बैकअप कोड बॉक्स में पेस्ट करें।",
+      iand: "<b>Android (Chrome):</b><br>1. इस पेज को Chrome में खोलें।<br>2. ऊपर दाएँ ⋮ मेनू दबाएँ।<br>3. \"Add to Home screen\" या \"Install app\" चुनें।",
+      iios: "<b>iPhone (Safari):</b><br>1. इस पेज को Safari में खोलें।<br>2. Share बटन दबाएँ।<br>3. \"Add to Home Screen\" चुनें।",
+      copy: "पेज का लिंक कॉपी करें",
+      copied: "लिंक कॉपी हुआ ✓",
+      exq: "क्या ऐप बंद करें?",
+      exy: "ऐप बंद करें",
+      exn: "रुकें",
+      byet: "🙏 धन्यवाद!",
+      byes: "अब आप फ़ोन के Home या Back बटन से ऐप बंद कर सकते हैं।",
+      byeb: "ऐप पर वापस",
+      novib: "इस फ़ोन/ब्राउज़र में कंपन समर्थित नहीं है (जैसे iPhone)। टैप फ़ीडबैक के लिए आवाज़ चालू करें।"
+    }
+  };
+
+  /* Named Spiritual Sounds Dictionaries */
+  var NAAM_SOUNDS_LIST = [
+    { id: 1, en: "🪵 Tulsi Wood", hi: "🪵 तुलसी काष्ठ" },
+    { id: 2, en: "🔔 Small Ghanti", hi: "🔔 छोटी घंटी" },
+    { id: 3, en: "🎶 Temple Manjira", hi: "🎶 मंदिर मंजीरा" },
+    { id: 4, en: "📿 Rudraksha Bead", hi: "📿 रुद्राक्ष मनका" },
+    { id: 5, en: "🥁 Damaru Tick", hi: "🥁 डमरू टिक" },
+    { id: 6, en: "💧 Amrit Drop", hi: "💧 अमृत बूँद" },
+    { id: 7, en: "🪘 Mridanga", hi: "🪘 मृदंग थाप" },
+    { id: 8, en: "✨ Soft Click", hi: "✨ सॉफ्ट क्लिक" }
+  ];
+
+  var BTN_SOUNDS_LIST = [
+    { id: 1, en: "⌨️ Soft Key", hi: "⌨️ सॉफ्ट की" },
+    { id: 2, en: "🫧 Bubble Pop", hi: "🫧 बबल पॉप" },
+    { id: 3, en: "🪵 Wood Thump", hi: "🪵 काष्ठ थाप" },
+    { id: 4, en: "🎐 Light Chime", hi: "🎐 मधुर चाइम" },
+    { id: 5, en: "🌊 Water Ripple", hi: "🌊 जल तरंग" },
+    { id: 6, en: "💎 Crystal Click", hi: "💎 क्रिस्टल क्लिक" }
+  ];
+
+  var MALA_SOUNDS_LIST = [
+    { id: 1, en: "🔔 Temple Ghanta", hi: "🔔 मंदिर घंटा" },
+    { id: 2, en: "🐚 Shankh Naad", hi: "🐚 शंखनाद" },
+    { id: 3, en: "🥣 Tibetan Bowl", hi: "🥣 सिंगिंग बाउल" },
+    { id: 4, en: "🪔 Maha Aarti Bell", hi: "🪔 महाआरती घंटी" },
+    { id: 5, en: "🟡 Deep Gong", hi: "🟡 गहरा गोंग" },
+    { id: 6, en: "🥁 Nagara Drum", hi: "🥁 नगाड़ा" },
+    { id: 7, en: "🕉️ Divine Om Chime", hi: "🕉️ दिव्य ॐ नाद" },
+    { id: 8, en: "🎶 Kirtan Kartal", hi: "🎶 कीर्तन करताल" }
+  ];
+
+  var THEME_CARDS_LIST = [
+    { id: "divine_forest", en: "Divine Forest", hi: "डिवाइन फॉरेस्ट", bg: "#142238", ink: "#ffffff", border: "#2c466e" },
+    { id: "saffron", en: "Temple Saffron", hi: "मंदिर केसरिया", bg: "#fffcf5", ink: "#4a2c0a", border: "#e8cfa8" },
+    { id: "royal_maroon", en: "Royal Maroon", hi: "रॉयल मैरून", bg: "#fdf5eb", ink: "#520c1c", border: "#e5cbb8" },
+    { id: "vrindavan_rose", en: "Vrindavan Rose", hi: "वृन्दावन रोज़", bg: "#fff5f8", ink: "#541930", border: "#f5c6d6" },
+    { id: "shiv_neel", en: "Shiv Neel", hi: "शिव नील", bg: "#162544", ink: "#ffffff", border: "#3b65b8" },
+    { id: "golden_mandir", en: "Golden Mandir", hi: "स्वर्ण मंदिर", bg: "#fdf4dc", ink: "#422c06", border: "#e6cb8a" },
+    { id: "lotus_serenity", en: "Lotus Serenity", hi: "कमल शांति", bg: "#fffafb", ink: "#3d2f35", border: "#edd0da" },
+    { id: "midnight_bhakti", en: "Midnight Bhakti", hi: "मिडनाइट भक्ति", bg: "#261933", ink: "#ffffff", border: "#483061" },
+    { id: "pure_ivory", en: "Pure Ivory", hi: "पवित्र आइवरी", bg: "#fcfaf2", ink: "#2b261f", border: "#e3dac9" },
+    { id: "sacred_sky", en: "Sacred Sky", hi: "पावन आकाश", bg: "#f5fbff", ink: "#12344d", border: "#bce0fd" },
+    { id: "night", en: "Night Mode", hi: "रात्रि मोड", bg: "#1b140b", ink: "#f6e7cf", border: "#403019" },
+    { id: "tulsi", en: "Tulsi Green", hi: "तुलसी हरित", bg: "#eefaf0", ink: "#12301c", border: "#b8e0c4" },
+    { id: "rudraksha", en: "Rudraksha", hi: "रुद्राक्ष", bg: "#fbeedb", ink: "#3a1f10", border: "#e0c29b" },
+    { id: "auto", en: "Auto (Day/Night)", hi: "ऑटो (दिन/रात)", bg: "linear-gradient(135deg,#fff8ee 50%,#1b140b 50%)", ink: "#d9791a", border: "#d9791a" }
+  ];
+
+  var PRESET_NAMES = [
+    { en: "Jai Shri Ram", hi: "जय श्री राम" },
+    { en: "Ram", hi: "राम" },
+    { en: "Sita Ram", hi: "सीता राम" },
+    { en: "Radha", hi: "राधा" },
+    { en: "OM Namah Shivaya", hi: "ॐ नमः शिवाय", altHi: "ॐ नम शिवाय" },
+    { en: "Jai Shri Shyam", hi: "जय श्री श्याम" },
+    { en: "Hare Krishna", hi: "हरे कृष्ण" }
+  ];
+
+  var STORAGE_KEY = "naam-counter-v2";
+  var MAX_NUM = 1e12;
+
+  function shortId() {
+    return Math.random().toString(36).substring(2, 9);
+  }
+
+  function getTodayKey(dateObj) {
+    var d = dateObj || new Date();
+    var yyyy = d.getFullYear();
+    var mm = String(d.getMonth() + 1).padStart(2, "0");
+    var dd = String(d.getDate()).padStart(2, "0");
+    return yyyy + "-" + mm + "-" + dd;
+  }
+
+  function clampNum(n, min, max) {
+    var v = Number(n);
+    if (!Number.isFinite(v)) return min;
+    return Math.min(max, Math.max(min, Math.floor(v)));
+  }
+
+  function clampGap(g) {
+    var v = Math.round(Number(g) * 10) / 10;
+    if (!Number.isFinite(v)) return 0.8;
+    return Math.min(10, Math.max(0.2, v));
+  }
+
+  /* Default State */
+  var firstId = shortId();
+  var state = {
+    sessions: [
+      { id: firstId, name: "OM Namah Shivaya", challengeTitle: "1,080 Naam Jap Challenge", count: 0, target: 1080, gap: 0.8, hrsPerDay: 1, isGoal: true }
+    ],
+    active: firstId,
+    history: {},
+    vib: true,
+    snd: true,
+    wake: true,
+    lang: "en",
+    theme: "saffron",
+    style: "bub",
+    snds: { c: 1, b: 1, m: 3 },
+    customSnds: { c: null, m: null },
+    timer: 5,
+    tmon: false,
+    installed: false,
+    activeTab: "home"
+  };
+
+  var VALID_THEMES = THEME_CARDS_LIST.map(function(item) { return item.id; }).concat(["krishna","lotus","ganga"]);
+
+  function loadState() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem("naam-counter-v1");
+      if (!raw) return;
+      var parsed = JSON.parse(raw);
+      if (parsed && Array.isArray(parsed.sessions) && parsed.sessions.length > 0) {
+        state.sessions = parsed.sessions.map(function(s) {
+          return {
+            id: String(s.id || shortId()),
+            name: String(s.name || "OM Namah Shivaya").slice(0, 60),
+            challengeTitle: s.challengeTitle ? String(s.challengeTitle).slice(0, 60) : "",
+            count: clampNum(s.count, 0, MAX_NUM),
+            target: s.target ? clampNum(s.target, 0, MAX_NUM) : 0,
+            gap: clampGap(s.gap !== undefined ? s.gap : 0.8),
+            hrsPerDay: Number(s.hrsPerDay) > 0 ? Number(s.hrsPerDay) : 1,
+            isGoal: Boolean(s.isGoal || s.target > 0)
+          };
+        });
+        var found = state.sessions.some(function(s) { return s.id === parsed.active; });
+        state.active = found ? parsed.active : state.sessions[0].id;
+        if (parsed.history && typeof parsed.history === "object") state.history = parsed.history;
+        if (typeof parsed.vib === "boolean") state.vib = parsed.vib;
+        if (typeof parsed.snd === "boolean") state.snd = parsed.snd;
+        if (typeof parsed.wake === "boolean") state.wake = parsed.wake;
+        if (parsed.lang === "en" || parsed.lang === "hi") state.lang = parsed.lang;
+        if (VALID_THEMES.indexOf(parsed.theme) !== -1) state.theme = parsed.theme;
+        if (["classic","mala","rud","jyoti","flow","bub"].indexOf(parsed.style) !== -1) state.style = parsed.style;
+        if (parsed.snds && typeof parsed.snds === "object") {
+          state.snds.c = clampNum(parsed.snds.c, 0, 99);
+          state.snds.b = clampNum(parsed.snds.b, 0, 6);
+          state.snds.m = clampNum(parsed.snds.m, 0, 99);
+        }
+        if (parsed.customSnds && typeof parsed.customSnds === "object") {
+          state.customSnds.c = parsed.customSnds.c || null;
+          state.customSnds.m = parsed.customSnds.m || null;
+        }
+        if (parsed.timer !== undefined) state.timer = clampNum(parsed.timer, 1, 60);
+        if (typeof parsed.tmon === "boolean") state.tmon = parsed.tmon;
+        if (typeof parsed.installed === "boolean") state.installed = parsed.installed;
+        if (["home","jap","schedule","history"].indexOf(parsed.activeTab) !== -1) state.activeTab = parsed.activeTab;
+      }
+    } catch (e) {}
+  }
+
+  function saveState() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {}
+  }
+
+  function getActiveSession() {
+    for (var i = 0; i < state.sessions.length; i++) {
+      if (state.sessions[i].id === state.active) return state.sessions[i];
+    }
+    state.active = state.sessions[0].id;
+    return state.sessions[0];
+  }
+
+  function t(key) {
+    return (STRINGS[state.lang] && STRINGS[state.lang][key]) || STRINGS.en[key] || key;
+  }
+
+  function displaySessionName(rawName) {
+    for (var i = 0; i < PRESET_NAMES.length; i++) {
+      var p = PRESET_NAMES[i];
+      if (rawName === p.en || rawName === p.hi || (p.altHi && rawName === p.altHi)) {
+        return state.lang === "hi" ? p.hi : p.en;
+      }
+    }
+    return rawName;
+  }
+
+  function getLifetimeCount() {
+    var total = 0;
+    for (var i = 0; i < state.sessions.length; i++) total += (state.sessions[i].count || 0);
+    return total;
+  }
+
+  function getTodayCount() {
+    var key = getTodayKey();
+    return clampNum(state.history[key] || 0, 0, MAX_NUM);
+  }
+
+  /* ==========================================
+     WEB AUDIO API SYNTHESIZER + CUSTOM AUDIO
+     ========================================== */
+  var audioCtx = null;
+  var compNode = null;
+  var keepAliveOsc = null;
+  var keepAliveAudioEl = null;
+  var keepAliveWavUrl = null;
+  var customAudioCache = { c: null, m: null };
+
+  function ensureAudio() {
+    if (!audioCtx) {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      audioCtx = new AC();
+      compNode = audioCtx.createDynamicsCompressor();
+      compNode.threshold.value = -8;
+      compNode.ratio.value = 8;
+      compNode.connect(audioCtx.destination);
+    }
+    if (audioCtx.state === "suspended") {
+      audioCtx.resume().catch(function(){});
+    }
+    return audioCtx;
+  }
+
+  function osc(type, f1, f2, dur, vol, delay) {
+    var ctx = ensureAudio();
+    if (!ctx) return;
+    var t0 = ctx.currentTime + (delay || 0);
+    var o = ctx.createOscillator();
+    var g = ctx.createGain();
+    o.type = type;
+    o.frequency.setValueAtTime(f1, t0);
+    if (f2 && f2 > 0) o.frequency.exponentialRampToValueAtTime(f2, t0 + dur * 0.8);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.linearRampToValueAtTime(vol, t0 + 0.005);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    o.connect(g);
+    g.connect(compNode);
+    o.start(t0);
+    o.stop(t0 + dur + 0.01);
+  }
+
+  function nz(dur, freq, Q, vol, delay) {
+    var ctx = ensureAudio();
+    if (!ctx) return;
+    var t0 = ctx.currentTime + (delay || 0);
+    var len = Math.max(1, Math.floor(ctx.sampleRate * dur));
+    var buf = ctx.createBuffer(1, len, ctx.sampleRate);
+    var data = buf.getChannelData(0);
+    for (var i = 0; i < len; i++) {
+      var norm = i / len;
+      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - norm, 3);
+    }
+    var src = ctx.createBufferSource();
+    src.buffer = buf;
+    var bp = ctx.createBiquadFilter();
+    bp.type = "bandpass";
+    bp.frequency.setValueAtTime(freq, t0);
+    bp.Q.setValueAtTime(Q, t0);
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(vol, t0);
+    src.connect(bp);
+    bp.connect(g);
+    g.connect(compNode);
+    src.start(t0);
+  }
+
+  function playCustomDataUrl(slot) {
+    var dataUrl = state.customSnds[slot];
+    if (!dataUrl) return;
+    try {
+      if (!customAudioCache[slot] || customAudioCache[slot].src !== dataUrl) {
+        customAudioCache[slot] = new Audio(dataUrl);
+      }
+      var el = customAudioCache[slot];
+      el.currentTime = 0;
+      el.play().catch(function(){});
+    } catch (e) {}
+  }
+
+  function playNaamSound(id, forcePreview) {
+    if (!forcePreview && !state.snd) return;
+    if (id === 0) return;
+    if (id === 99 && state.customSnds.c) {
+      playCustomDataUrl("c");
+      return;
+    }
+    if (id === 1) { // Tulsi Wood
+      osc("sine", 700, 260, 0.08, 1.0, 0);
+    } else if (id === 2) { // Small Ghanti
+      osc("sine", 1760, 0, 0.42, 0.55, 0);
+      osc("sine", 3520, 0, 0.25, 0.25, 0);
+    } else if (id === 3) { // Temple Manjira
+      osc("sine", 3100, 0, 0.35, 0.45, 0);
+      osc("sine", 4650, 0, 0.22, 0.3, 0);
+      nz(0.03, 5500, 3.0, 0.8, 0);
+    } else if (id === 4) { // Rudraksha Bead
+      osc("triangle", 480, 170, 0.055, 1.1, 0);
+      nz(0.015, 1800, 1.5, 1.2, 0);
+    } else if (id === 5) { // Damaru Tick
+      osc("sine", 320, 180, 0.09, 1.0, 0);
+      osc("sine", 360, 210, 0.08, 0.7, 0.065);
+    } else if (id === 6) { // Amrit Drop
+      osc("sine", 1400, 520, 0.1, 0.9, 0);
+    } else if (id === 7) { // Mridanga
+      osc("sine", 190, 82, 0.16, 1.2, 0);
+      osc("triangle", 580, 0, 0.07, 0.4, 0);
+    } else if (id === 8) { // Soft Click
+      nz(0.02, 3000, 0.9, 2.2, 0);
+    }
+  }
+
+  function playBtnSound(id, forcePreview) {
+    if (!forcePreview && !state.snd) return;
+    if (id === 0) return;
+    if (id === 1) { // Soft Key
+      nz(0.012, 2600, 1.2, 1.8, 0);
+      osc("sine", 1900, 1100, 0.03, 0.5, 0);
+    } else if (id === 2) { // Bubble Pop
+      osc("sine", 620, 190, 0.11, 1.1, 0);
+    } else if (id === 3) { // Wood Thump
+      osc("sine", 160, 70, 0.13, 1.3, 0);
+    } else if (id === 4) { // Light Chime
+      osc("sine", 880, 0, 0.28, 0.5, 0);
+      osc("sine", 1320, 0, 0.22, 0.25, 0);
+    } else if (id === 5) { // Water Ripple
+      osc("sine", 300, 800, 0.1, 0.9, 0);
+    } else if (id === 6) { // Crystal Click
+      osc("sine", 2400, 1200, 0.045, 0.6, 0);
+    }
+  }
+
+  function play108Sound(id, forcePreview) {
+    if (!forcePreview && !state.snd) return;
+    if (id === 0) return;
+    if (id === 99 && state.customSnds.m) {
+      playCustomDataUrl("m");
+      return;
+    }
+    var ctx = ensureAudio();
+    if (!ctx) return;
+    if (id === 1) { // Temple Ghanta (Large Bell)
+      var bf = [440, 1188, 2130, 3300];
+      var bv = [1, 0.55, 0.32, 0.2];
+      for (var j = 0; j < bf.length; j++) osc("sine", bf[j], 0, 2.8, bv[j], 0);
+    } else if (id === 2) { // Shankh Naad
+      var t0 = ctx.currentTime;
+      var o1 = ctx.createOscillator();
+      var o2 = ctx.createOscillator();
+      var lp = ctx.createBiquadFilter();
+      var g = ctx.createGain();
+      o1.type = "sawtooth"; o2.type = "sawtooth";
+      o1.frequency.setValueAtTime(233, t0);
+      o2.frequency.setValueAtTime(236, t0);
+      lp.type = "lowpass";
+      lp.frequency.setValueAtTime(900, t0);
+      g.gain.setValueAtTime(0.001, t0);
+      g.gain.linearRampToValueAtTime(0.7, t0 + 0.3);
+      g.gain.setValueAtTime(0.7, t0 + 1.4);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + 2.2);
+      o1.connect(lp); o2.connect(lp); lp.connect(g); g.connect(compNode);
+      o1.start(t0); o2.start(t0);
+      o1.stop(t0 + 2.25); o2.stop(t0 + 2.25);
+    } else if (id === 3) { // Tibetan Singing Bowl
+      osc("sine", 432, 0, 4.5, 1.0, 0);
+      osc("sine", 434, 0, 4.5, 0.8, 0);
+      osc("sine", 1192, 0, 4.5, 0.3, 0);
+    } else if (id === 4) { // Maha Aarti Bell
+      for (var k = 0; k < 4; k++) {
+        osc("sine", 1320, 0, 0.55, 0.55, k * 0.22);
+        osc("sine", 2640, 0, 0.35, 0.3, k * 0.22);
+      }
+    } else if (id === 5) { // Deep Gong
+      var freqs = [98, 196 * 1.003, 294 * 1.003, 392 * 1.003, 588 * 1.003];
+      var vols = [1.4, 1, 0.63, 0.42, 0.25];
+      for (var i = 0; i < freqs.length; i++) osc("sine", freqs[i], 0, 3.2, vols[i], 0);
+    } else if (id === 6) { // Nagara Drum
+      osc("sine", 120, 45, 0.7, 2.0, 0);
+      nz(0.15, 200, 0.7, 1.2, 0);
+      osc("sine", 135, 50, 0.6, 1.6, 0.28);
+    } else if (id === 7) { // Divine Om Chime
+      osc("sine", 136.1, 0, 3.8, 1.1, 0);
+      osc("sine", 272.2, 0, 3.4, 0.65, 0);
+      osc("sine", 408.3, 0, 2.8, 0.35, 0);
+    } else if (id === 8) { // Kirtan Kartal
+      for (var m = 0; m < 3; m++) {
+        osc("sine", 2900, 0, 0.3, 0.45, m * 0.18);
+        osc("sine", 4200, 0, 0.2, 0.3, m * 0.18);
+        nz(0.03, 5000, 2.5, 0.9, m * 0.18);
+      }
+    }
+  }
+
+  function playWhoosh() {
+    if (!state.snd) return;
+    var ctx = ensureAudio();
+    if (!ctx) return;
+    var t0 = ctx.currentTime;
+    var dur = 0.8;
+    var len = Math.floor(ctx.sampleRate * dur);
+    var buf = ctx.createBuffer(1, len, ctx.sampleRate);
+    var data = buf.getChannelData(0);
+    for (var i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
+    var src = ctx.createBufferSource();
+    src.buffer = buf;
+    var bp = ctx.createBiquadFilter();
+    bp.type = "bandpass";
+    bp.Q.setValueAtTime(1.4, t0);
+    bp.frequency.setValueAtTime(250, t0);
+    bp.frequency.exponentialRampToValueAtTime(4500, t0 + 0.55);
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0.001, t0);
+    g.gain.linearRampToValueAtTime(1.6, t0 + 0.22);
+    g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.7);
+    src.connect(bp); bp.connect(g); g.connect(compNode);
+    src.start(t0);
+  }
+
+  var lastRatchetTime = 0;
+  function playRatchet() {
+    if (!state.snd) return;
+    var now = performance.now();
+    if (now - lastRatchetTime < 30) return;
+    lastRatchetTime = now;
+    nz(0.007, 3000, 1.2, 1.5, 0);
+    osc("triangle", 1000, 520, 0.025, 0.3, 0);
+  }
+
+  function build20kHzWavUrl() {
+    if (keepAliveWavUrl) return keepAliveWavUrl;
+    var sampleRate = 44100;
+    var numSamples = sampleRate;
+    var buffer = new ArrayBuffer(44 + numSamples * 2);
+    var view = new DataView(buffer);
+    function writeStr(off, str) {
+      for (var i = 0; i < str.length; i++) view.setUint8(off + i, str.charCodeAt(i));
+    }
+    writeStr(0, "RIFF");
+    view.setUint32(4, 36 + numSamples * 2, true);
+    writeStr(8, "WAVE");
+    writeStr(12, "fmt ");
+    view.setUint32(16, 16, true);
+    view.setUint16(20, 1, true);
+    view.setUint16(22, 1, true);
+    view.setUint32(24, sampleRate, true);
+    view.setUint32(28, sampleRate * 2, true);
+    view.setUint16(32, 2, true);
+    view.setUint16(34, 16, true);
+    writeStr(36, "data");
+    view.setUint32(40, numSamples * 2, true);
+    for (var s = 0; s < numSamples; s++) {
+      var sample = Math.sin(2 * Math.PI * 20000 * (s / sampleRate)) * 0.04;
+      view.setInt16(44 + s * 2, sample * 32767, true);
+    }
+    var blob = new Blob([buffer], { type: "audio/wav" });
+    keepAliveWavUrl = URL.createObjectURL(blob);
+    return keepAliveWavUrl;
+  }
+
+  function startAudioKeepAlive() {
+    stopAudioKeepAlive();
+    if (!state.snd) return;
+    var ctx = ensureAudio();
+    if (ctx) {
+      try {
+        var o = ctx.createOscillator();
+        var g = ctx.createGain();
+        o.type = "sine";
+        o.frequency.value = 20000;
+        g.gain.value = 0.03;
+        o.connect(g);
+        g.connect(ctx.destination);
+        o.start();
+        keepAliveOsc = { o: o, g: g };
+      } catch (e) {}
+    }
+    try {
+      if (!keepAliveAudioEl) {
+        keepAliveAudioEl = new Audio(build20kHzWavUrl());
+        keepAliveAudioEl.loop = true;
+      }
+      keepAliveAudioEl.play().catch(function(){});
+    } catch (e) {}
+  }
+
+  function stopAudioKeepAlive() {
+    if (keepAliveOsc) {
+      try { keepAliveOsc.o.stop(); keepAliveOsc.o.disconnect(); } catch (e) {}
+      keepAliveOsc = null;
+    }
+    if (keepAliveAudioEl) {
+      try { keepAliveAudioEl.pause(); } catch (e) {}
+    }
+  }
+
+  function triggerVibrate(pattern) {
+    if (!state.vib) return;
+    if ("vibrate" in navigator) {
+      try { navigator.vibrate(pattern); } catch (e) {}
+    }
+  }
+
+  /* ==========================================
+     WAKE LOCK
+     ========================================== */
+  var wakeLockSentinel = null;
+  function updateWakeLock() {
+    var shouldLock = state.wake && (autoState === "running");
+    if (!("wakeLock" in navigator)) return;
+    if (shouldLock && !wakeLockSentinel) {
+      navigator.wakeLock.request("screen").then(function(s) {
+        wakeLockSentinel = s;
+        s.addEventListener("release", function() { wakeLockSentinel = null; });
+      }).catch(function(){});
+    } else if (!shouldLock && wakeLockSentinel) {
+      wakeLockSentinel.release().catch(function(){});
+      wakeLockSentinel = null;
+    }
+  }
+
+  document.addEventListener("visibilitychange", function() {
+    if (document.visibilityState === "visible") updateWakeLock();
+  });
+
+  /* ==========================================
+     SVG COUNTER STYLES (108 ELEMENTS)
+     ========================================== */
+  var svgEl = document.getElementById("tap-svg");
+  var btnTap = document.getElementById("btn-tap");
+  var currentBuiltStyle = null;
+  var styleElements = [];
+  var jyotiScaleGroup = null;
+  var lastLitCount = -1;
+
+  function calcLitCount(count) {
+    if (count === 0) return 0;
+    var rem = count % 108;
+    return rem === 0 ? 108 : rem;
+  }
+
+  function createSvgNode(tag, attrs) {
+    var el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for (var k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+
+  function buildCounterStyleDOM(style) {
+    svgEl.innerHTML = "";
+    styleElements = [];
+    jyotiScaleGroup = null;
+    lastLitCount = -1;
+    currentBuiltStyle = style;
+
+    btnTap.className = "tap-btn style-" + style;
+    if (style === "classic") {
+      svgEl.style.display = "none";
+      return;
+    }
+    svgEl.style.display = "block";
+
+    if (style === "mala" || style === "rud") {
+      var isRud = style === "rud";
+      var rBead = isRud ? 3.4 : 3.2;
+      for (var i = 0; i < 108; i++) {
+        var angDeg = 90 + (i + 1) * (360 / 109);
+        var rad = angDeg * Math.PI / 180;
+        var cx = 130 + 108 * Math.cos(rad);
+        var cy = 118 + 108 * Math.sin(rad);
+        var c = createSvgNode("circle", { cx: cx.toFixed(2), cy: cy.toFixed(2), r: rBead });
+        svgEl.appendChild(c);
+        styleElements.push(c);
+      }
+      var guru = createSvgNode("circle", {
+        cx: 130, cy: 226, r: 7,
+        fill: isRud ? "#7e3318" : "#a9672b",
+        stroke: isRud ? "#3a140a" : "none",
+        "stroke-width": isRud ? "1.2" : "0"
+      });
+      var tassel = createSvgNode("polygon", {
+        points: "130,234 123,252 137,252",
+        fill: isRud ? "#b5361b" : "#a9672b"
+      });
+      svgEl.appendChild(guru);
+      svgEl.appendChild(tassel);
+    } else if (style === "jyoti") {
+      var defs = createSvgNode("defs", {});
+      var lg = createSvgNode("linearGradient", { id: "flameGrad", x1: "0", y1: "1", x2: "0", y2: "0" });
+      lg.appendChild(createSvgNode("stop", { offset: "0%", "stop-color": "#ff7a18" }));
+      lg.appendChild(createSvgNode("stop", { offset: "100%", "stop-color": "#ffe066" }));
+      var rg = createSvgNode("radialGradient", { id: "glowGrad", cx: "50%", cy: "50%", r: "50%" });
+      rg.appendChild(createSvgNode("stop", { offset: "0%", "stop-color": "#ffae42", "stop-opacity": "0.55" }));
+      rg.appendChild(createSvgNode("stop", { offset: "100%", "stop-color": "#ffae42", "stop-opacity": "0" }));
+      defs.appendChild(lg);
+      defs.appendChild(rg);
+      svgEl.appendChild(defs);
+
+      var rootG = createSvgNode("g", { transform: "translate(130,14) scale(0.8) translate(-130,-14)" });
+      for (var k = 0; k < 108; k++) {
+        var aDeg = 90 + (k + 1) * (360 / 109);
+        var aRad = aDeg * Math.PI / 180;
+        var rx = 130 + 106 * Math.cos(aRad);
+        var ry = 130 + 106 * Math.sin(aRad);
+        var dot = createSvgNode("circle", { cx: rx.toFixed(1), cy: ry.toFixed(1), r: 2.6 });
+        rootG.appendChild(dot);
+        styleElements.push(dot);
+      }
+      var glow = createSvgNode("circle", { cx: 130, cy: 115, r: 68, fill: "url(#glowGrad)" });
+      rootG.appendChild(glow);
+
+      jyotiScaleGroup = createSvgNode("g", { transform: "translate(130, 175) scale(0.55) translate(-130, -175)" });
+      var flameAnim = createSvgNode("g", { class: "diya-flame-anim", style: "transform-origin: 130px 175px; animation: flameFlicker 2.2s ease-in-out infinite;" });
+      var flamePath = createSvgNode("path", {
+        d: "M130 68 C108 110 96 146 130 176 C164 146 152 110 130 68 Z",
+        fill: "url(#flameGrad)"
+      });
+      flameAnim.appendChild(flamePath);
+      jyotiScaleGroup.appendChild(flameAnim);
+      rootG.appendChild(jyotiScaleGroup);
+
+      var bowl = createSvgNode("path", { d: "M62 182 Q130 242 198 182 Z", fill: "#a4561b" });
+      var rim = createSvgNode("ellipse", { cx: 130, cy: 182, rx: 68, ry: 9, fill: "#c47a2c" });
+      rootG.appendChild(bowl);
+      rootG.appendChild(rim);
+      svgEl.appendChild(rootG);
+    } else if (style === "flow") {
+      for (var r = 0; r < 9; r++) {
+        for (var col = 0; col < 12; col++) {
+          var rect = createSvgNode("rect", {
+            x: 18 + col * 19,
+            y: 24 + r * 19,
+            width: 15,
+            height: 15,
+            rx: 4
+          });
+          svgEl.appendChild(rect);
+          styleElements.push(rect);
+        }
+      }
+    } else if (style === "bub") {
+      for (var b = 0; b < 108; b++) {
+        var br = 8.2 * Math.sqrt(b + 0.5);
+        var bang = b * 2.39996;
+        var bx = 130 + br * Math.cos(bang);
+        var by = 96 + br * Math.sin(bang);
+        var radB = 2.4 + b * 0.028;
+        var bub = createSvgNode("circle", {
+          cx: bx.toFixed(2),
+          cy: by.toFixed(2),
+          r: radB.toFixed(2),
+          "stroke-width": "1.5"
+        });
+        svgEl.appendChild(bub);
+        styleElements.push(bub);
+      }
+    }
+  }
+
+  function applyBeadVisual(index, isLit, style) {
+    var el = styleElements[index];
+    if (!el) return;
+    if (style === "mala") {
+      el.setAttribute("fill", isLit ? "#a9672b" : "var(--line)");
+    } else if (style === "rud") {
+      el.setAttribute("fill", isLit ? "#7e3318" : "var(--line)");
+      el.setAttribute("stroke", isLit ? "#3a140a" : "none");
+      el.setAttribute("stroke-width", isLit ? "1" : "0");
+    } else if (style === "jyoti") {
+      el.setAttribute("fill", isLit ? "#ff9f1c" : "var(--line)");
+    } else if (style === "flow") {
+      el.setAttribute("fill", isLit ? "var(--accent)" : "var(--line)");
+    } else if (style === "bub") {
+      el.setAttribute("fill", isLit ? "var(--accent2)" : "none");
+      el.setAttribute("stroke", isLit ? "var(--accent)" : "var(--line)");
+    }
+  }
+
+  function updateCounterArtwork(count, forceAll) {
+    var style = state.style;
+    if (currentBuiltStyle !== style) {
+      buildCounterStyleDOM(style);
+      forceAll = true;
+    }
+    if (style === "classic") return;
+
+    var newLit = calcLitCount(count);
+    if (forceAll || lastLitCount === -1) {
+      for (var i = 0; i < 108; i++) applyBeadVisual(i, i < newLit, style);
+    } else if (newLit > lastLitCount) {
+      for (var j = lastLitCount; j < newLit; j++) applyBeadVisual(j, true, style);
+    } else if (newLit < lastLitCount) {
+      for (var k = newLit; k < lastLitCount; k++) applyBeadVisual(k, false, style);
+    }
+    lastLitCount = newLit;
+
+    if (style === "jyoti" && jyotiScaleGroup) {
+      var sc = 0.55 + (newLit / 108) * 0.45;
+      jyotiScaleGroup.setAttribute("transform", "translate(130, 175) scale(" + sc.toFixed(3) + ") translate(-130, -175)");
+    }
+  }
+
+  /* ==========================================
+     SYNCHRONIZED SPEED WIDGETS (Main & Settings)
+     ========================================== */
+  var speedWidgets = [];
+  var PRESET_GAPS = [0.5, 0.8, 1, 2, 3, 5];
+
+  function createSpeedWidget(mountEl) {
+    mountEl.innerHTML = "";
+    var row = document.createElement("div");
+    row.className = "speed-row";
+    var btnMin = document.createElement("button");
+    btnMin.className = "step-btn speed-step";
+    btnMin.textContent = "−";
+    var inp = document.createElement("input");
+    inp.type = "number";
+    inp.step = "0.1";
+    inp.min = "0.2";
+    inp.max = "10";
+    inp.className = "speed-input";
+    var btnPls = document.createElement("button");
+    btnPls.className = "step-btn speed-step";
+    btnPls.textContent = "+";
+    row.appendChild(btnMin);
+    row.appendChild(inp);
+    row.appendChild(btnPls);
+
+    var grid = document.createElement("div");
+    grid.className = "preset-grid-3x2";
+    var presetBtns = [];
+    PRESET_GAPS.forEach(function(val) {
+      var b = document.createElement("button");
+      b.className = "chip";
+      b.textContent = val + "s";
+      b.addEventListener("click", function() {
+        playBtnSound(state.snds.b);
+        setSessionGap(val);
+      });
+      grid.appendChild(b);
+      presetBtns.push({ val: val, btn: b });
+    });
+
+    var slWrap = document.createElement("div");
+    slWrap.className = "custom-slider-wrap";
+    var track = document.createElement("div");
+    track.className = "custom-slider-track";
+    var fill = document.createElement("div");
+    fill.className = "custom-slider-fill";
+    var thumb = document.createElement("div");
+    thumb.className = "custom-slider-thumb";
+    thumb.tabIndex = 0;
+    thumb.setAttribute("role", "slider");
+    thumb.setAttribute("aria-valuemin", "0.2");
+    thumb.setAttribute("aria-valuemax", "10");
+    track.appendChild(fill);
+    track.appendChild(thumb);
+
+    var scale = document.createElement("div");
+    scale.className = "slider-scale";
+    scale.innerHTML = "<span>0.2s</span><span>10s</span>";
+    slWrap.appendChild(track);
+    slWrap.appendChild(scale);
+
+    mountEl.appendChild(row);
+    mountEl.appendChild(grid);
+    mountEl.appendChild(slWrap);
+
+    btnMin.addEventListener("click", function() {
+      playBtnSound(state.snds.b);
+      setSessionGap(getActiveSession().gap - 0.1);
+    });
+    btnPls.addEventListener("click", function() {
+      playBtnSound(state.snds.b);
+      setSessionGap(getActiveSession().gap + 0.1);
+    });
+    inp.addEventListener("change", function() {
+      setSessionGap(inp.value);
+    });
+
+    var dragging = false;
+    var grabOffsetPx = 0;
+
+    thumb.addEventListener("pointerdown", function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      dragging = true;
+      thumb.setPointerCapture(e.pointerId);
+      var thumbRect = thumb.getBoundingClientRect();
+      var thumbCenter = thumbRect.left + thumbRect.width / 2;
+      grabOffsetPx = e.clientX - thumbCenter;
+    });
+
+    thumb.addEventListener("pointermove", function(e) {
+      if (!dragging) return;
+      var trackRect = track.getBoundingClientRect();
+      if (trackRect.width <= 0) return;
+      var x = (e.clientX - grabOffsetPx) - trackRect.left;
+      var ratio = Math.min(1, Math.max(0, x / trackRect.width));
+      var rawGap = 0.2 + ratio * (10 - 0.2);
+      var stepped = clampGap(rawGap);
+      if (stepped !== getActiveSession().gap) {
+        playRatchet();
+        setSessionGap(stepped);
+      }
+    });
+
+    function endDrag(e) {
+      if (!dragging) return;
+      dragging = false;
+      try { thumb.releasePointerCapture(e.pointerId); } catch (err) {}
+    }
+    thumb.addEventListener("pointerup", endDrag);
+    thumb.addEventListener("pointercancel", endDrag);
+
+    thumb.addEventListener("keydown", function(e) {
+      if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
+        e.preventDefault();
+        playRatchet();
+        setSessionGap(getActiveSession().gap - 0.1);
+      } else if (e.key === "ArrowRight" || e.key === "ArrowUp") {
+        e.preventDefault();
+        playRatchet();
+        setSessionGap(getActiveSession().gap + 0.1);
+      }
+    });
+
+    speedWidgets.push({ inp: inp, presetBtns: presetBtns, fill: fill, thumb: thumb });
+  }
+
+  function syncSpeedWidgets() {
+    var gap = getActiveSession().gap;
+    var pct = ((gap - 0.2) / (10 - 0.2)) * 100;
+    speedWidgets.forEach(function(w) {
+      if (document.activeElement !== w.inp) w.inp.value = gap;
+      w.presetBtns.forEach(function(p) {
+        p.btn.classList.toggle("shimmer-fill", Math.abs(p.val - gap) < 0.01);
+      });
+      w.fill.style.width = pct.toFixed(2) + "%";
+      w.thumb.style.left = pct.toFixed(2) + "%";
+      w.thumb.setAttribute("aria-valuenow", String(gap));
+    });
+    updateAutoHintLine();
+  }
+
+  function setSessionGap(newGap) {
+    var sess = getActiveSession();
+    sess.gap = clampGap(newGap);
+    saveState();
+    syncSpeedWidgets();
+    if (autoState === "running") restartAutoInterval();
+  }
+
+  /* ==========================================
+     AUTO JAP & TIMER ENGINE
+     ========================================== */
+  var autoPanelOpen = false;
+  var autoState = "idle";
+  var autoTickTimer = null;
+  var countdownTimer = null;
+  var remainingSec = state.timer * 60;
+  var timerFinishedMsgVisible = false;
+
+  function formatMMSS(sec) {
+    var s = Math.max(0, Math.floor(sec));
+    var m = Math.floor(s / 60);
+    var r = s % 60;
+    return (m < 10 ? "0" + m : m) + ":" + (r < 10 ? "0" + r : r);
+  }
+
+  function restartAutoInterval() {
+    if (autoTickTimer) clearInterval(autoTickTimer);
+    var gapMs = Math.round(getActiveSession().gap * 1000);
+    autoTickTimer = setInterval(function() {
+      incrementCount(true);
+    }, gapMs);
+  }
+
+  function startAutoOrResume() {
+    ensureAudio();
+    timerFinishedMsgVisible = false;
+    if (autoState === "idle") remainingSec = state.timer * 60;
+    autoState = "running";
+    restartAutoInterval();
+    if (state.tmon) {
+      if (countdownTimer) clearInterval(countdownTimer);
+      countdownTimer = setInterval(function() {
+        remainingSec--;
+        if (remainingSec <= 0) {
+          remainingSec = 0;
+          onCountdownComplete();
+        } else {
+          renderAutoSection();
+        }
+      }, 1000);
+    }
+    startAudioKeepAlive();
+    updateWakeLock();
+    renderAutoSection();
+  }
+
+  function pauseAuto() {
+    autoState = "paused";
+    if (autoTickTimer) { clearInterval(autoTickTimer); autoTickTimer = null; }
+    if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+    stopAudioKeepAlive();
+    updateWakeLock();
+    renderAutoSection();
+  }
+
+  function stopAutoAndResetIdle() {
+    autoState = "idle";
+    if (autoTickTimer) { clearInterval(autoTickTimer); autoTickTimer = null; }
+    if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+    remainingSec = state.timer * 60;
+    stopAudioKeepAlive();
+    updateWakeLock();
+    renderAutoSection();
+  }
+
+  function onCountdownComplete() {
+    stopAutoAndResetIdle();
+    timerFinishedMsgVisible = true;
+    play108Sound(state.snds.m, false);
+    triggerVibrate([300, 150, 300, 150, 300]);
+    renderAutoSection();
+  }
+
+  function updateAutoHintLine() {
+    var sess = getActiveSession();
+    var txt = t("autohint").replace("{g}", sess.gap);
+    if (state.tmon) {
+      var dispSec = autoState === "idle" ? state.timer * 60 : remainingSec;
+      txt = "⏱ " + formatMMSS(dispSec) + " · " + txt;
+    }
+    document.getElementById("ui-auto-hint-line").textContent = txt;
+  }
+
+  function renderAutoSection() {
+    var btnToggle = document.getElementById("btn-auto-toggle");
+    var caret = document.getElementById("ui-auto-caret");
+    var panel = document.getElementById("panel-auto");
+    var sw = document.getElementById("btn-tm-switch");
+    var tmDisp = document.getElementById("ui-tm-display");
+    var btnMin = document.getElementById("btn-tm-minus");
+    var btnPls = document.getElementById("btn-tm-plus");
+    var btnStart = document.getElementById("btn-auto-start");
+    var btnStop = document.getElementById("btn-auto-stop");
+    var tmDone = document.getElementById("ui-tm-done");
+
+    caret.textContent = autoPanelOpen ? "▴" : "▾";
+    panel.classList.toggle("hidden", !autoPanelOpen);
+    btnToggle.classList.toggle("rot-shimmer", autoState === "running");
+
+    sw.classList.toggle("on", state.tmon);
+    sw.setAttribute("aria-checked", String(state.tmon));
+
+    var dispSec = autoState === "idle" ? state.timer * 60 : remainingSec;
+    tmDisp.textContent = "⏱ " + formatMMSS(dispSec);
+    tmDisp.classList.toggle("dimmed", !state.tmon);
+    tmDisp.classList.toggle("rot-shimmer", autoState === "running" && state.tmon);
+
+    btnMin.disabled = !state.tmon;
+    btnPls.disabled = !state.tmon;
+
+    if (autoState === "idle") {
+      btnStart.textContent = t("bst");
+      btnStart.classList.add("shimmer-fill");
+      btnStop.classList.add("hidden");
+    } else if (autoState === "running") {
+      btnStart.textContent = t("bpa");
+      btnStart.classList.remove("shimmer-fill");
+      btnStop.classList.remove("hidden");
+      btnStop.textContent = t("bsp");
+    } else if (autoState === "paused") {
+      btnStart.textContent = t("bres");
+      btnStart.classList.add("shimmer-fill");
+      btnStop.classList.remove("hidden");
+      btnStop.textContent = t("bsp");
+    }
+
+    tmDone.textContent = t("tdone");
+    tmDone.classList.toggle("hidden", !timerFinishedMsgVisible);
+    updateAutoHintLine();
+  }
+
+  /* ==========================================
+     COUNTING & DAILY HISTORY TRACKING
+     ========================================== */
+  var resetConfirmTimeout = null;
+
+  function incrementCount(fromAuto) {
+    var sess = getActiveSession();
+    if (sess.count >= MAX_NUM) return;
+    sess.count += 1;
+
+    var tKey = getTodayKey();
+    state.history[tKey] = clampNum((state.history[tKey] || 0) + 1, 0, MAX_NUM);
+
+    saveState();
+
+    var isMala108 = (sess.count % 108 === 0);
+    var timerRunning = (autoState === "running" && state.tmon);
+
+    if (isMala108 && !timerRunning) {
+      play108Sound(state.snds.m, false);
+      triggerVibrate(400);
+    } else {
+      playNaamSound(state.snds.c, false);
+      triggerVibrate(30);
+    }
+
+    if (fromAuto && sess.target > 0 && sess.count >= sess.target) {
+      stopAutoAndResetIdle();
+    }
+
+    renderCountScreen(false);
+    renderHomeTab();
+    if (state.activeTab === "history") renderHistoryTab(false);
+  }
+
+  function triggerTapButtonVisual() {
+    btnTap.classList.add("pressed");
+    setTimeout(function() { btnTap.classList.remove("pressed"); }, 60);
+  }
+
+  /* ==========================================
+     NAVIGATION TABS & SWIPE GESTURES
+     ========================================== */
+  var TAB_ORDER = ["home", "jap", "schedule", "history"];
+
+  function switchTab(tabName) {
+    state.activeTab = tabName;
+    saveState();
+    var views = {
+      home: document.getElementById("view-home"),
+      jap: document.getElementById("view-jap"),
+      schedule: document.getElementById("view-schedule"),
+      history: document.getElementById("view-history")
+    };
+    for (var k in views) {
+      views[k].classList.toggle("hidden", k !== tabName);
+    }
+    var navBtns = document.querySelectorAll(".nav-tab");
+    navBtns.forEach(function(b) {
+      var isAct = b.getAttribute("data-tab") === tabName;
+      b.classList.toggle("active", isAct);
+      b.classList.toggle("shimmer-fill", isAct);
+    });
+
+    if (tabName === "home") renderHomeTab();
+    else if (tabName === "jap") renderCountScreen(true);
+    else if (tabName === "schedule") {
+      updateCalculatorOutput();
+      renderCreateGoalForm();
+    } else if (tabName === "history") {
+      renderHistoryTab(true);
+    }
+  }
+
+  document.querySelectorAll(".nav-tab").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      playBtnSound(state.snds.b);
+      switchTab(btn.getAttribute("data-tab"));
+    });
+  });
+
+  document.getElementById("btn-home-new-goal").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    switchTab("schedule");
+    var cgCard = document.getElementById("card-create-goal");
+    if (cgCard) cgCard.scrollIntoView({ behavior: "smooth" });
+  });
+
+  /* Swipe Left / Right Across Screen to Switch Tabs */
+  var touchStartX = 0;
+  var touchStartY = 0;
+  var ignoreSwipe = false;
+
+  document.addEventListener("touchstart", function(e) {
+    if (!e.touches || e.touches.length !== 1) return;
+    var target = e.target;
+    if (
+      target.closest(".custom-slider-wrap") ||
+      target.closest(".drawer") ||
+      target.closest("input") ||
+      target.closest("textarea") ||
+      target.closest("select") ||
+      drawer.classList.contains("open") ||
+      settingsDrawer.classList.contains("open")
+    ) {
+      ignoreSwipe = true;
+      return;
+    }
+    ignoreSwipe = false;
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener("touchend", function(e) {
+    if (ignoreSwipe || !e.changedTouches || e.changedTouches.length !== 1) return;
+    var dx = e.changedTouches[0].clientX - touchStartX;
+    var dy = e.changedTouches[0].clientY - touchStartY;
+
+    if (Math.abs(dx) > 68 && Math.abs(dx) > Math.abs(dy) * 1.6) {
+      var curIdx = TAB_ORDER.indexOf(state.activeTab);
+      if (curIdx === -1) curIdx = 0;
+      if (dx < 0 && curIdx < TAB_ORDER.length - 1) {
+        playBtnSound(state.snds.b);
+        switchTab(TAB_ORDER[curIdx + 1]);
+      } else if (dx > 0 && curIdx > 0) {
+        playBtnSound(state.snds.b);
+        switchTab(TAB_ORDER[curIdx - 1]);
+      }
+    }
+  }, { passive: true });
+
+  /* ==========================================
+     HOME TAB RENDERING
+     ========================================== */
+  function getSessionChallengeHeading(s) {
+    if (s.challengeTitle && s.challengeTitle.trim()) return s.challengeTitle;
+    if (s.target > 0) return s.target.toLocaleString("en-IN") + " " + t("challenge_suffix");
+    return displaySessionName(s.name);
+  }
+
+  function renderHomeTab() {
+    var todayCnt = getTodayCount();
+    var lifeCnt = getLifetimeCount();
+
+    document.getElementById("ui-home-today-lbl").textContent = t("today_lbl");
+    document.getElementById("ui-home-today-val").textContent = todayCnt.toLocaleString("en-IN");
+    document.getElementById("ui-home-today-sub").textContent = t("malas_today") + ": " + Math.floor(todayCnt / 108).toLocaleString("en-IN") + " · " + t("beads") + ": " + (todayCnt % 108);
+
+    document.getElementById("ui-home-life-lbl").textContent = t("life_lbl");
+    document.getElementById("ui-home-life-sub").textContent = t("life_sub");
+    document.getElementById("ui-home-life-val").textContent = lifeCnt.toLocaleString("en-IN");
+
+    document.getElementById("ui-home-goals-title").textContent = t("goals_title");
+    document.getElementById("btn-home-new-goal").textContent = t("btn_new_goal");
+
+    var listEl = document.getElementById("home-goals-list");
+    listEl.innerHTML = "";
+
+    if (state.sessions.length === 0) {
+      var empty = document.createElement("div");
+      empty.className = "main-card hint-text";
+      empty.style.textAlign = "center";
+      empty.textContent = t("no_goals");
+      listEl.appendChild(empty);
+      return;
+    }
+
+    state.sessions.forEach(function(s) {
+      var card = document.createElement("div");
+      card.className = "goal-card";
+
+      var top = document.createElement("div");
+      top.className = "goal-card-top";
+
+      var title = document.createElement("div");
+      title.className = "goal-title";
+      title.textContent = getSessionChallengeHeading(s);
+
+      var badge = document.createElement("span");
+      badge.className = "goal-naam-badge";
+      badge.textContent = "🙏 " + displaySessionName(s.name);
+
+      top.appendChild(title);
+      top.appendChild(badge);
+
+      var meta = document.createElement("div");
+      meta.className = "goal-meta-line";
+      var targTxt = s.target > 0 ? s.target.toLocaleString("en-IN") : t("notarget");
+      var extraEst = "";
+      if (s.target > 0) {
+        var hrs = s.hrsPerDay || 1;
+        var gap = s.gap || 0.8;
+        var perDay = Math.max(1, Math.floor((hrs * 3600) / gap));
+        var daysNeeded = Math.max(1, Math.ceil(s.target / perDay));
+        extraEst = " · " + t("days_est").replace("{d}", daysNeeded).replace("{h}", hrs);
+      }
+      meta.textContent = s.count.toLocaleString("en-IN") + " / " + targTxt + extraEst;
+
+      var pTrack = document.createElement("div");
+      pTrack.className = "prog-track";
+      var pFill = document.createElement("div");
+      pFill.className = "prog-fill";
+      var pctNum = s.target > 0 ? Math.min(100, (s.count / s.target) * 100) : 0;
+      pFill.style.width = pctNum.toFixed(2) + "%";
+      pTrack.appendChild(pFill);
+
+      var foot = document.createElement("div");
+      foot.className = "goal-card-foot";
+      var pctSpan = document.createElement("span");
+      pctSpan.style.fontSize = "12.5px";
+      pctSpan.style.fontWeight = "700";
+      pctSpan.style.color = pctNum >= 100 ? "var(--ok)" : "var(--mute)";
+      pctSpan.textContent = s.target > 0 ? pctNum.toFixed(1) + "%" : t("notarget");
+
+      var btnGo = document.createElement("button");
+      btnGo.className = "small-btn shimmer-fill";
+      btnGo.textContent = t("chant_now");
+      btnGo.addEventListener("click", function() {
+        playBtnSound(state.snds.b);
+        if (state.active !== s.id) {
+          stopAutoAndResetIdle();
+          state.active = s.id;
+          saveState();
+          syncSpeedWidgets();
+        }
+        switchTab("jap");
+      });
+
+      foot.appendChild(pctSpan);
+      foot.appendChild(btnGo);
+
+      card.appendChild(top);
+      card.appendChild(meta);
+      card.appendChild(pTrack);
+      card.appendChild(foot);
+      listEl.appendChild(card);
+    });
+  }
+
+  /* ==========================================
+     MY JAP TAB & SESSION DROPDOWN RENDERING
+     ========================================== */
+  var selSessionEl = document.getElementById("sel-active-session");
+  selSessionEl.addEventListener("change", function() {
+    playBtnSound(state.snds.b);
+    var newId = selSessionEl.value;
+    if (newId && newId !== state.active) {
+      stopAutoAndResetIdle();
+      state.active = newId;
+      saveState();
+      syncSpeedWidgets();
+      renderCountScreen(true);
+      renderDrawerDynamicLists();
+    }
+  });
+
+  function populateSessionDropdown() {
+    selSessionEl.innerHTML = "";
+    state.sessions.forEach(function(s) {
+      var opt = document.createElement("option");
+      opt.value = s.id;
+      var heading = getSessionChallengeHeading(s);
+      var naam = displaySessionName(s.name);
+      opt.textContent = (heading !== naam ? heading + " (" + naam + ")" : naam) + " — " + s.count.toLocaleString("en-IN");
+      if (s.id === state.active) opt.selected = true;
+      selSessionEl.appendChild(opt);
+    });
+  }
+
+  function renderCountScreen(forceArt) {
+    populateSessionDropdown();
+    var sess = getActiveSession();
+    document.getElementById("ui-sess-name").textContent = displaySessionName(sess.name);
+    var malas = Math.floor(sess.count / 108);
+    var beads = sess.count % 108;
+    document.getElementById("ui-sub-line").textContent = t("mala") + ": " + malas.toLocaleString("en-IN") + " · " + t("beads") + ": " + beads;
+    document.getElementById("ui-big-count").textContent = sess.count.toLocaleString("en-IN");
+
+    var fill = document.getElementById("ui-prog-fill");
+    var pctEl = document.getElementById("ui-prog-pct");
+    var targEl = document.getElementById("ui-prog-target");
+    var doneEl = document.getElementById("ui-target-done");
+
+    if (sess.target && sess.target > 0) {
+      var rawPct = (sess.count / sess.target) * 100;
+      var barPct = Math.min(100, rawPct);
+      fill.style.width = barPct.toFixed(2) + "%";
+      var formattedPct = rawPct < 10 && rawPct > 0 ? rawPct.toFixed(2) : rawPct.toFixed(1);
+      pctEl.textContent = formattedPct + "%";
+      targEl.textContent = t("target") + " " + sess.target.toLocaleString("en-IN");
+      if (sess.count >= sess.target) {
+        doneEl.textContent = t("done");
+        doneEl.classList.remove("hidden");
+      } else {
+        doneEl.classList.add("hidden");
+      }
+    } else {
+      fill.style.width = "0%";
+      pctEl.textContent = "0.0%";
+      targEl.textContent = t("notarget");
+      doneEl.classList.add("hidden");
+    }
+
+    updateCounterArtwork(sess.count, forceArt);
+  }
+
+  /* ==========================================
+     SCHEDULE TAB: CALCULATOR & CREATE GOAL
+     ========================================== */
+  var inpCalcGoal = document.getElementById("inp-calc-goal");
+  var inpCalcSec = document.getElementById("inp-calc-sec");
+  var inpCalcHrs = document.getElementById("inp-calc-hrs");
+
+  function updateCalculatorOutput() {
+    var goal = Math.max(1, clampNum(inpCalcGoal.value, 1, MAX_NUM));
+    var sec = Math.max(0.1, Number(inpCalcSec.value) || 0.8);
+    var hrs = Math.max(0.1, Math.min(24, Number(inpCalcHrs.value) || 1));
+
+    var countsPerDay = Math.max(1, Math.floor((hrs * 3600) / sec));
+    var daysNeeded = Math.max(1, Math.ceil(goal / countsPerDay));
+
+    document.getElementById("ui-res-total-val").textContent = goal.toLocaleString("en-IN");
+    document.getElementById("ui-res-daily-val").textContent = countsPerDay.toLocaleString("en-IN");
+    document.getElementById("ui-res-days-val").textContent = daysNeeded.toLocaleString("en-IN") + " " + t("days_word");
+  }
+
+  inpCalcGoal.addEventListener("input", updateCalculatorOutput);
+  inpCalcSec.addEventListener("input", updateCalculatorOutput);
+  inpCalcHrs.addEventListener("input", updateCalculatorOutput);
+
+  var CG_GOAL_PRESETS = [
+    { val: 1000, en: "1,000", hi: "1,000" },
+    { val: 10000, en: "10,000", hi: "10,000" },
+    { val: 100000, en: "1 Lakh", hi: "1 लाख" },
+    { val: 1000000, en: "10 Lakh", hi: "10 लाख" },
+    { val: 10000000, en: "1 Crore", hi: "1 करोड़" }
+  ];
+  var CG_HRS_PRESETS = [0.5, 1, 2, 3, 4];
+
+  var cgState = {
+    goalVal: 10000000,
+    goalManual: false,
+    hrsVal: 1,
+    hrsManual: false,
+    naamIdx: 2,
+    naamManual: false
+  };
+
+  function autoFillChallengeTitle() {
+    var inpTitle = document.getElementById("inp-cg-title");
+    var numStr = Number(cgState.goalVal || 1000).toLocaleString("en-IN");
+    inpTitle.value = numStr + " " + t("challenge_suffix");
+  }
+
+  function renderCreateGoalForm() {
+    var goalWrap = document.getElementById("cg-goal-chips");
+    var inpCustomGoal = document.getElementById("inp-cg-custom-goal");
+    goalWrap.innerHTML = "";
+
+    CG_GOAL_PRESETS.forEach(function(p) {
+      var b = document.createElement("button");
+      var isSel = !cgState.goalManual && cgState.goalVal === p.val;
+      b.className = "chip" + (isSel ? " shimmer-fill" : "");
+      b.textContent = state.lang === "hi" ? p.hi : p.en;
+      b.addEventListener("click", function() {
+        playBtnSound(state.snds.b);
+        cgState.goalManual = false;
+        cgState.goalVal = p.val;
+        inpCustomGoal.classList.add("hidden");
+        autoFillChallengeTitle();
+        renderCreateGoalForm();
+      });
+      goalWrap.appendChild(b);
+    });
+
+    var btnGoalMan = document.createElement("button");
+    btnGoalMan.className = "chip" + (cgState.goalManual ? " shimmer-fill" : "");
+    btnGoalMan.textContent = t("manual_edit");
+    btnGoalMan.addEventListener("click", function() {
+      playBtnSound(state.snds.b);
+      cgState.goalManual = true;
+      inpCustomGoal.classList.remove("hidden");
+      inpCustomGoal.value = String(cgState.goalVal);
+      inpCustomGoal.focus();
+      renderCreateGoalForm();
+    });
+    goalWrap.appendChild(btnGoalMan);
+
+    var hrsWrap = document.getElementById("cg-hrs-chips");
+    var inpCustomHrs = document.getElementById("inp-cg-custom-hrs");
+    hrsWrap.innerHTML = "";
+
+    CG_HRS_PRESETS.forEach(function(h) {
+      var b = document.createElement("button");
+      var isSel = !cgState.hrsManual && Math.abs(cgState.hrsVal - h) < 0.01;
+      b.className = "chip" + (isSel ? " shimmer-fill" : "");
+      b.textContent = h === 0.5 ? "0.5h (30m)" : h + "h";
+      b.addEventListener("click", function() {
+        playBtnSound(state.snds.b);
+        cgState.hrsManual = false;
+        cgState.hrsVal = h;
+        inpCustomHrs.classList.add("hidden");
+        renderCreateGoalForm();
+      });
+      hrsWrap.appendChild(b);
+    });
+
+    var btnHrsMan = document.createElement("button");
+    btnHrsMan.className = "chip" + (cgState.hrsManual ? " shimmer-fill" : "");
+    btnHrsMan.textContent = t("manual_edit");
+    btnHrsMan.addEventListener("click", function() {
+      playBtnSound(state.snds.b);
+      cgState.hrsManual = true;
+      inpCustomHrs.classList.remove("hidden");
+      inpCustomHrs.value = String(cgState.hrsVal);
+      inpCustomHrs.focus();
+      renderCreateGoalForm();
+    });
+    hrsWrap.appendChild(btnHrsMan);
+
+    var naamWrap = document.getElementById("cg-naam-chips");
+    var inpCustomNaam = document.getElementById("inp-cg-custom-naam");
+    naamWrap.innerHTML = "";
+
+    PRESET_NAMES.forEach(function(nm, idx) {
+      var b = document.createElement("button");
+      var isSel = !cgState.naamManual && cgState.naamIdx === idx;
+      b.className = "chip" + (isSel ? " shimmer-fill" : "");
+      b.textContent = state.lang === "hi" ? nm.hi : nm.en;
+      b.addEventListener("click", function() {
+        playBtnSound(state.snds.b);
+        cgState.naamManual = false;
+        cgState.naamIdx = idx;
+        inpCustomNaam.classList.add("hidden");
+        renderCreateGoalForm();
+      });
+      naamWrap.appendChild(b);
+    });
+
+    var btnNaamMan = document.createElement("button");
+    btnNaamMan.className = "chip" + (cgState.naamManual ? " shimmer-fill" : "");
+    btnNaamMan.textContent = t("manual_edit");
+    btnNaamMan.addEventListener("click", function() {
+      playBtnSound(state.snds.b);
+      cgState.naamManual = true;
+      inpCustomNaam.classList.remove("hidden");
+      inpCustomNaam.focus();
+      renderCreateGoalForm();
+    });
+    naamWrap.appendChild(btnNaamMan);
+  }
+
+  document.getElementById("inp-cg-custom-goal").addEventListener("input", function() {
+    var v = clampNum(this.value, 1, MAX_NUM);
+    cgState.goalVal = v;
+    autoFillChallengeTitle();
+  });
+
+  document.getElementById("inp-cg-custom-hrs").addEventListener("input", function() {
+    var v = Number(this.value);
+    if (v > 0 && v <= 24) cgState.hrsVal = v;
+  });
+
+  document.getElementById("btn-create-goal-submit").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    stopAutoAndResetIdle();
+
+    var goalCount = cgState.goalManual
+      ? clampNum(document.getElementById("inp-cg-custom-goal").value || 1000, 1, MAX_NUM)
+      : cgState.goalVal;
+
+    var hrsPerDay = cgState.hrsManual
+      ? Math.max(0.1, Math.min(24, Number(document.getElementById("inp-cg-custom-hrs").value) || 1))
+      : cgState.hrsVal;
+
+    var chosenNaam = "";
+    if (cgState.naamManual) {
+      chosenNaam = document.getElementById("inp-cg-custom-naam").value.trim().slice(0, 60);
+    }
+    if (!chosenNaam) {
+      var pObj = PRESET_NAMES[cgState.naamIdx] || PRESET_NAMES[0];
+      chosenNaam = state.lang === "hi" ? pObj.hi : pObj.en;
+    }
+
+    var rawChallengeTitle = document.getElementById("inp-cg-title").value.trim().slice(0, 60);
+    if (!rawChallengeTitle) {
+      rawChallengeTitle = goalCount.toLocaleString("en-IN") + " " + t("challenge_suffix");
+    }
+
+    var currentGap = getActiveSession().gap || 0.8;
+    var newGoalSession = {
+      id: shortId(),
+      name: chosenNaam,
+      challengeTitle: rawChallengeTitle,
+      count: 0,
+      target: goalCount,
+      gap: currentGap,
+      hrsPerDay: hrsPerDay,
+      isGoal: true
+    };
+
+    state.sessions.unshift(newGoalSession);
+    state.active = newGoalSession.id;
+    saveState();
+    renderAllTextAndUI();
+    switchTab("home");
+  });
+
+  /* ==========================================
+     HISTORY TAB: ANIMATED 7-DAY BAR CHART & LIST
+     ========================================== */
+  function renderHistoryTab(animateBars) {
+    var chartWrap = document.getElementById("hist-7d-chart");
+    var listWrap = document.getElementById("hist-7d-list");
+    chartWrap.innerHTML = "";
+    listWrap.innerHTML = "";
+
+    var daysData = [];
+    var maxCnt = 1;
+    var dayNamesEn = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    var dayNamesHi = ["रवि", "सोम", "मंगल", "बुध", "गुरु", "शुक्र", "शनि"];
+
+    for (var i = 6; i >= 0; i--) {
+      var d = new Date();
+      d.setDate(d.getDate() - i);
+      var key = getTodayKey(d);
+      var cnt = clampNum(state.history[key] || 0, 0, MAX_NUM);
+      if (cnt > maxCnt) maxCnt = cnt;
+      var dayIdx = d.getDay();
+      var shortDay = state.lang === "hi" ? dayNamesHi[dayIdx] : dayNamesEn[dayIdx];
+      var dateFormatted = d.toLocaleDateString(state.lang === "hi" ? "hi-IN" : "en-IN", {
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+      });
+      daysData.push({
+        key: key,
+        cnt: cnt,
+        shortDay: shortDay,
+        dateFormatted: dateFormatted,
+        isToday: i === 0
+      });
+    }
+
+    var fillQueue = [];
+    daysData.forEach(function(item) {
+      var col = document.createElement("div");
+      col.className = "bar-col" + (item.isToday ? " is-today" : "");
+
+      var topVal = document.createElement("div");
+      topVal.className = "bar-val-top";
+      topVal.textContent = item.cnt > 9999 ? (item.cnt / 1000).toFixed(1) + "k" : item.cnt.toLocaleString("en-IN");
+
+      var track = document.createElement("div");
+      track.className = "bar-track";
+
+      var fill = document.createElement("div");
+      fill.className = "bar-fill";
+      var targetPct = item.cnt > 0 ? Math.max(8, (item.cnt / maxCnt) * 100) : 2;
+      if (animateBars) {
+        fill.style.height = "0%";
+        fillQueue.push({ el: fill, pct: targetPct });
+      } else {
+        fill.style.height = targetPct.toFixed(1) + "%";
+      }
+      track.appendChild(fill);
+
+      var lbl = document.createElement("div");
+      lbl.className = "bar-day-lbl";
+      lbl.textContent = item.shortDay;
+
+      col.appendChild(topVal);
+      col.appendChild(track);
+      col.appendChild(lbl);
+      chartWrap.appendChild(col);
+    });
+
+    if (animateBars && fillQueue.length > 0) {
+      requestAnimationFrame(function() {
+        setTimeout(function() {
+          fillQueue.forEach(function(f, idx) {
+            setTimeout(function() {
+              f.el.style.height = f.pct.toFixed(1) + "%";
+            }, idx * 45);
+          });
+        }, 30);
+      });
+    }
+
+    daysData.slice().reverse().forEach(function(item) {
+      var row = document.createElement("div");
+      row.className = "hist-row";
+
+      var left = document.createElement("div");
+      var dTitle = document.createElement("div");
+      dTitle.className = "hist-date";
+      dTitle.textContent = item.dateFormatted + " (" + item.shortDay + ")" + (item.isToday ? " · " + t("today_lbl") : "");
+
+      var dSub = document.createElement("div");
+      dSub.className = "hist-sub";
+      dSub.textContent = t("mala") + ": " + Math.floor(item.cnt / 108).toLocaleString("en-IN") + " · " + t("beads") + ": " + (item.cnt % 108);
+
+      left.appendChild(dTitle);
+      left.appendChild(dSub);
+
+      var right = document.createElement("div");
+      right.className = "hist-cnt";
+      right.textContent = item.cnt.toLocaleString("en-IN");
+
+      row.appendChild(left);
+      row.appendChild(right);
+      listWrap.appendChild(row);
+    });
+  }
+
+  /* ==========================================
+     LEFT DRAWER & RIGHT SETTINGS LISTS
+     ========================================== */
+  function applyTheme() {
+    var html = document.documentElement;
+    var meta = document.getElementById("meta-theme");
+    if (state.theme === "auto") {
+      html.removeAttribute("data-theme");
+    } else {
+      html.setAttribute("data-theme", state.theme);
+    }
+    var themeColors = {
+      saffron: "#d9791a", divine_forest: "#0f1b2d", royal_maroon: "#7b112c",
+      vrindavan_rose: "#c92a68", shiv_neel: "#111c35", golden_mandir: "#b7791f",
+      lotus_serenity: "#b84a72", midnight_bhakti: "#1d1427", pure_ivory: "#8c6d46",
+      sacred_sky: "#0284c7", night: "#1b140b", krishna: "#2f6fd6",
+      lotus: "#d6336c", tulsi: "#2e9b57", rudraksha: "#b5361b",
+      ganga: "#1a8fa8", auto: "#d9791a"
+    };
+    meta.setAttribute("content", themeColors[state.theme] || "#d9791a");
+  }
+
+  function renderDrawerDynamicLists() {
+    var oldBox = document.getElementById("old-sessions-list");
+    oldBox.innerHTML = "";
+    state.sessions.forEach(function(s) {
+      var row = document.createElement("div");
+      row.className = "sess-item";
+      var info = document.createElement("div");
+      info.className = "sess-info";
+      var title = document.createElement("div");
+      title.className = "sess-title" + (s.id === state.active ? " active" : "");
+      title.textContent = getSessionChallengeHeading(s) + " (" + displaySessionName(s.name) + ")";
+      var sub = document.createElement("div");
+      sub.className = "sess-sub";
+      var tStr = s.target > 0 ? s.target.toLocaleString("en-IN") : t("notarget");
+      sub.textContent = s.count.toLocaleString("en-IN") + " / " + tStr;
+      info.appendChild(title);
+      info.appendChild(sub);
+
+      var acts = document.createElement("div");
+      acts.className = "sess-actions";
+      var btnOpen = document.createElement("button");
+      btnOpen.className = "small-btn shimmer-fill";
+      btnOpen.textContent = t("open");
+      btnOpen.addEventListener("click", function() {
+        playBtnSound(state.snds.b);
+        if (state.active !== s.id) {
+          stopAutoAndResetIdle();
+          state.active = s.id;
+          saveState();
+          syncSpeedWidgets();
+          renderCountScreen(true);
+          renderDrawerDynamicLists();
+        }
+        closeDrawer();
+        switchTab("jap");
+      });
+
+      var btnDel = document.createElement("button");
+      btnDel.className = "small-btn del";
+      btnDel.textContent = "🗑";
+      var delPending = false;
+      btnDel.addEventListener("click", function() {
+        if (!delPending) {
+          playBtnSound(state.snds.b);
+          delPending = true;
+          btnDel.textContent = t("conf");
+          setTimeout(function() {
+            delPending = false;
+            btnDel.textContent = "🗑";
+          }, 3000);
+        } else {
+          playWhoosh();
+          triggerVibrate(60);
+          stopAutoAndResetIdle();
+          if (state.sessions.length <= 1) {
+            s.count = 0;
+          } else {
+            state.sessions = state.sessions.filter(function(item) { return item.id !== s.id; });
+            if (state.active === s.id) state.active = state.sessions[0].id;
+          }
+          saveState();
+          syncSpeedWidgets();
+          renderCountScreen(true);
+          renderHomeTab();
+          renderDrawerDynamicLists();
+        }
+      });
+
+      acts.appendChild(btnOpen);
+      acts.appendChild(btnDel);
+      row.appendChild(info);
+      row.appendChild(acts);
+      oldBox.appendChild(row);
+    });
+
+    /* Right Settings Drawer: 2-Column Theme Cards */
+    var cWrap = document.getElementById("theme-color-cards");
+    cWrap.innerHTML = "";
+    THEME_CARDS_LIST.forEach(function(tc) {
+      var b = document.createElement("button");
+      var isSel = state.theme === tc.id;
+      b.className = "theme-card-btn" + (isSel ? " selected" : "");
+      b.style.background = tc.bg;
+      b.style.color = tc.ink;
+      b.style.border = "2px solid " + (isSel ? "var(--accent)" : tc.border);
+      b.textContent = (state.lang === "hi" ? tc.hi : tc.en) + (isSel ? " ✓" : "");
+      b.addEventListener("click", function() {
+        playBtnSound(state.snds.b);
+        state.theme = tc.id;
+        saveState();
+        applyTheme();
+        renderDrawerDynamicLists();
+      });
+      cWrap.appendChild(b);
+    });
+
+    /* Counter Style Chips */
+    var styleDefs = [
+      { id: "classic", key: "s_classic" },
+      { id: "mala", key: "s_mala" },
+      { id: "rud", key: "s_rud" },
+      { id: "jyoti", key: "s_jyoti" },
+      { id: "flow", key: "s_flow" },
+      { id: "bub", key: "s_bub" }
+    ];
+    var sWrap = document.getElementById("theme-style-chips");
+    sWrap.innerHTML = "";
+    styleDefs.forEach(function(sd) {
+      var b = document.createElement("button");
+      b.className = "chip" + (state.style === sd.id ? " shimmer-fill" : "");
+      b.textContent = t(sd.key);
+      b.addEventListener("click", function() {
+        playBtnSound(state.snds.b);
+        state.style = sd.id;
+        saveState();
+        renderCountScreen(true);
+        renderDrawerDynamicLists();
+      });
+      sWrap.appendChild(b);
+    });
+
+    /* Named Sound Choice Chips + Browse Custom Audio */
+    function buildNamedSndGroup(containerId, list, prop, playFn, fileInputId) {
+      var wrap = document.getElementById(containerId);
+      wrap.innerHTML = "";
+      list.forEach(function(sndItem) {
+        var b = document.createElement("button");
+        var isSel = state.snds[prop] === sndItem.id;
+        b.className = "chip" + (isSel ? " shimmer-fill" : "");
+        b.textContent = state.lang === "hi" ? sndItem.hi : sndItem.en;
+        b.addEventListener("click", function() {
+          state.snds[prop] = sndItem.id;
+          saveState();
+          playFn(sndItem.id, true);
+          renderDrawerDynamicLists();
+        });
+        wrap.appendChild(b);
+      });
+
+      if (fileInputId) {
+        if (state.customSnds[prop]) {
+          var custBtn = document.createElement("button");
+          custBtn.className = "chip" + (state.snds[prop] === 99 ? " shimmer-fill" : "");
+          custBtn.textContent = t("custom_snd_active");
+          custBtn.addEventListener("click", function() {
+            state.snds[prop] = 99;
+            saveState();
+            playFn(99, true);
+            renderDrawerDynamicLists();
+          });
+          wrap.appendChild(custBtn);
+        }
+
+        var browseBtn = document.createElement("button");
+        browseBtn.className = "chip";
+        browseBtn.style.borderStyle = "dashed";
+        browseBtn.textContent = t("browse_snd");
+        browseBtn.addEventListener("click", function() {
+          document.getElementById(fileInputId).click();
+        });
+        wrap.appendChild(browseBtn);
+      }
+
+      var muteBtn = document.createElement("button");
+      muteBtn.className = "chip" + (state.snds[prop] === 0 ? " shimmer-fill" : "");
+      muteBtn.textContent = t("nosnd");
+      muteBtn.addEventListener("click", function() {
+        state.snds[prop] = 0;
+        saveState();
+        renderDrawerDynamicLists();
+      });
+      wrap.appendChild(muteBtn);
+    }
+
+    buildNamedSndGroup("snd-chips-c", NAAM_SOUNDS_LIST, "c", playNaamSound, "file-custom-naam-snd");
+    buildNamedSndGroup("snd-chips-m", MALA_SOUNDS_LIST, "m", play108Sound, "file-custom-108-snd");
+    buildNamedSndGroup("snd-chips-b", BTN_SOUNDS_LIST, "b", playBtnSound, null);
+  }
+
+  function handleAudioUpload(inputEl, slot, playFn) {
+    inputEl.addEventListener("change", function() {
+      var file = inputEl.files && inputEl.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function(ev) {
+        state.customSnds[slot] = ev.target.result;
+        state.snds[slot] = 99;
+        saveState();
+        playFn(99, true);
+        renderDrawerDynamicLists();
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+  handleAudioUpload(document.getElementById("file-custom-naam-snd"), "c", playNaamSound);
+  handleAudioUpload(document.getElementById("file-custom-108-snd"), "m", play108Sound);
+
+  function renderAllTextAndUI() {
+    document.documentElement.lang = state.lang;
+    applyTheme();
+
+    document.getElementById("ui-title").textContent = t("title");
+    document.getElementById("btn-install-banner").textContent = t("inst2");
+    document.getElementById("ui-tap-label").textContent = t("tap");
+    document.getElementById("ui-auto-btn-txt").textContent = t("auto");
+    document.getElementById("ui-tm-sec").textContent = t("tm_sec");
+    document.getElementById("ui-tm-hint2").textContent = t("tm_hint2");
+    document.getElementById("ui-gap-label-main").textContent = t("gap");
+    document.getElementById("ui-gap-label-settings").textContent = t("gap");
+
+    /* Bottom Nav Labels */
+    document.getElementById("ui-nav-home").textContent = t("nav_home");
+    document.getElementById("ui-nav-jap").textContent = t("nav_jap");
+    document.getElementById("ui-nav-schedule").textContent = t("nav_sched");
+    document.getElementById("ui-nav-history").textContent = t("nav_hist");
+
+    /* Schedule Labels */
+    document.getElementById("ui-calc-heading").textContent = t("calc_heading");
+    document.getElementById("ui-calc-sub").textContent = t("calc_sub");
+    document.getElementById("ui-calc-goal-lbl").textContent = t("calc_goal_lbl");
+    document.getElementById("ui-calc-sec-lbl").textContent = t("calc_sec_lbl");
+    document.getElementById("ui-calc-hrs-lbl").textContent = t("calc_hrs_lbl");
+    document.getElementById("ui-res-total-lbl").textContent = t("res_total_lbl");
+    document.getElementById("ui-res-daily-lbl").textContent = t("res_daily_lbl");
+    document.getElementById("ui-res-days-lbl").textContent = t("res_days_lbl");
+
+    document.getElementById("ui-cg-heading").textContent = t("cg_heading");
+    document.getElementById("ui-cg-title-lbl").textContent = t("cg_title_lbl");
+    document.getElementById("inp-cg-title").placeholder = t("cg_title_ph");
+    document.getElementById("ui-cg-count-lbl").textContent = t("cg_count_lbl");
+    document.getElementById("ui-cg-hrs-lbl").textContent = t("cg_hrs_lbl");
+    document.getElementById("ui-cg-naam-lbl").textContent = t("cg_naam_lbl");
+    document.getElementById("btn-create-goal-submit").textContent = t("cg_submit");
+
+    /* History Labels */
+    document.getElementById("ui-hist-chart-title").textContent = t("hist_chart_title");
+    document.getElementById("ui-hist-chart-sub").textContent = t("hist_chart_sub");
+    document.getElementById("ui-hist-list-title").textContent = t("hist_list_title");
+
+    /* Right Settings Drawer Labels */
+    document.getElementById("ui-set-title").textContent = t("set_title");
+    document.getElementById("ui-set-lang-lbl").textContent = t("m_lang");
+    document.getElementById("ui-set-lang-val").textContent = t("lang");
+    document.getElementById("ui-set-snd-tab").textContent = t("set_snd_tab");
+    document.getElementById("ui-set-th-tab").textContent = t("set_th_tab");
+    document.getElementById("ui-set-spd-tab").textContent = t("set_spd_tab");
+
+    document.getElementById("btn-undo").textContent = t("undo");
+    document.getElementById("btn-edit").textContent = t("edit");
+    if (!resetConfirmTimeout) document.getElementById("btn-reset").textContent = t("reset");
+
+    document.getElementById("ui-lbl-name").textContent = t("name");
+    document.getElementById("ui-lbl-target").textContent = t("tlabel");
+    document.getElementById("inp-edit-target").placeholder = t("tph");
+    document.getElementById("ui-lbl-setc").textContent = t("setc");
+    document.getElementById("inp-edit-count").placeholder = t("cph");
+    document.getElementById("btn-edit-cancel").textContent = t("cancel");
+    document.getElementById("btn-edit-save").textContent = t("save");
+
+    /* Left Menu headers */
+    document.getElementById("ui-menu-title").textContent = t("menu");
+    document.getElementById("m-txt-old").textContent = t("m_old");
+    document.getElementById("m-txt-bk").textContent = t("m_bk");
+    document.getElementById("m-txt-rs").textContent = t("m_rs");
+    document.getElementById("m-txt-in").textContent = t("m_in");
+    document.getElementById("m-txt-sh").textContent = t("m_sh");
+    document.getElementById("m-txt-ex").textContent = t("m_ex");
+
+    document.getElementById("ui-bkh").textContent = t("bkh");
+    document.getElementById("btn-create-bk").textContent = t("bkb");
+    document.getElementById("txt-bk-out").placeholder = t("bkph");
+
+    var chipVib = document.getElementById("chip-toggle-vib");
+    var chipSnd = document.getElementById("chip-toggle-snd");
+    var chipWake = document.getElementById("chip-toggle-wake");
+    chipVib.textContent = t("vib");
+    chipSnd.textContent = t("snd");
+    chipWake.textContent = t("wake");
+    chipVib.classList.toggle("shimmer-fill", state.vib);
+    chipSnd.classList.toggle("shimmer-fill", state.snd);
+    chipWake.classList.toggle("shimmer-fill", state.wake);
+
+    var vibHint = document.getElementById("ui-vib-hint");
+    if (!("vibrate" in navigator)) {
+      vibHint.textContent = t("novib");
+      vibHint.classList.remove("hidden");
+    } else {
+      vibHint.classList.add("hidden");
+    }
+
+    document.getElementById("ui-th-colors").textContent = t("th_colors");
+    document.getElementById("ui-th-style").textContent = t("th_style");
+    document.getElementById("ui-sg-c").textContent = t("sg_c");
+    document.getElementById("ui-sg-b").textContent = t("sg_b");
+    document.getElementById("ui-sg-m").textContent = t("sg_m");
+
+    document.getElementById("ui-rsh").textContent = t("rsh");
+    document.getElementById("txt-rs-in").placeholder = t("bkph2");
+    document.getElementById("btn-do-restore").textContent = t("bkr");
+
+    var stepsHtml = t("iand") + "<br><br>" + t("iios");
+    document.getElementById("ui-inst-steps").innerHTML = stepsHtml;
+    document.getElementById("ui-menu-inst-steps").innerHTML = stepsHtml;
+    document.getElementById("btn-copy-link-top").textContent = t("copy");
+    document.getElementById("btn-menu-copy-link").textContent = t("copy");
+    document.getElementById("btn-menu-install").textContent = t("inst2");
+
+    document.getElementById("ui-exq").textContent = t("exq");
+    document.getElementById("btn-exit-stay").textContent = t("exn");
+    document.getElementById("btn-exit-confirm").textContent = t("exy");
+    document.getElementById("ui-byet").textContent = t("byet");
+    document.getElementById("ui-byes").textContent = t("byes");
+    document.getElementById("btn-back-to-app").textContent = t("byeb");
+
+    renderHomeTab();
+    renderCountScreen(true);
+    renderAutoSection();
+    syncSpeedWidgets();
+    updateCalculatorOutput();
+    renderCreateGoalForm();
+    renderHistoryTab(false);
+    renderDrawerDynamicLists();
+    updateInstallVisibility();
+  }
+
+  /* ==========================================
+     EVENT LISTENERS & INTERACTIONS
+     ========================================== */
+  loadState();
+
+  createSpeedWidget(document.getElementById("speed-mount-main"));
+  createSpeedWidget(document.getElementById("speed-mount-settings"));
+  autoFillChallengeTitle();
+
+  /* TAP Button */
+  btnTap.addEventListener("pointerdown", function(e) {
+    e.preventDefault();
+    ensureAudio();
+    triggerTapButtonVisual();
+    incrementCount(false);
+  });
+
+  /* Spacebar Tap */
+  window.addEventListener("keydown", function(e) {
+    if (e.code === "Space" && state.activeTab === "jap") {
+      var tag = (document.activeElement && document.activeElement.tagName) || "";
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "BUTTON" || tag === "SELECT") return;
+      e.preventDefault();
+      ensureAudio();
+      triggerTapButtonVisual();
+      incrementCount(false);
+    }
+  });
+
+  /* Left Drawer Open / Close / Accordion */
+  var drawer = document.getElementById("drawer");
+  var overlay = document.getElementById("drawer-overlay");
+  var drawerList = document.getElementById("drawer-list");
+
+  function openDrawer() {
+    drawer.classList.add("open");
+    overlay.classList.add("open");
+  }
+  function closeDrawer() {
+    drawer.classList.remove("open");
+    overlay.classList.remove("open");
+  }
+
+  document.getElementById("btn-menu").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    openDrawer();
+  });
+  document.getElementById("btn-drawer-close").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    closeDrawer();
+  });
+  overlay.addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    closeDrawer();
+  });
+
+  var accItems = drawerList.querySelectorAll(".menu-item[data-acc]");
+  accItems.forEach(function(item) {
+    var rowBtn = item.querySelector(".menu-row");
+    rowBtn.addEventListener("click", function() {
+      playBtnSound(state.snds.b);
+      var wasOpen = item.classList.contains("open");
+      accItems.forEach(function(other) {
+        other.classList.remove("open");
+        other.querySelector(".menu-row").classList.remove("shimmer-fill");
+      });
+      if (!wasOpen) {
+        item.classList.add("open");
+        rowBtn.classList.add("shimmer-fill");
+        drawerList.classList.add("has-open");
+      } else {
+        drawerList.classList.remove("has-open");
+      }
+    });
+  });
+
+  /* Right Settings Drawer Open / Close / Accordion */
+  var settingsDrawer = document.getElementById("settings-drawer");
+  var settingsOverlay = document.getElementById("settings-overlay");
+  var settingsList = document.getElementById("settings-list");
+
+  function openSettingsDrawer() {
+    settingsDrawer.classList.add("open");
+    settingsOverlay.classList.add("open");
+  }
+  function closeSettingsDrawer() {
+    settingsDrawer.classList.remove("open");
+    settingsOverlay.classList.remove("open");
+  }
+
+  document.getElementById("btn-settings-top").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    openSettingsDrawer();
+  });
+  document.getElementById("btn-settings-close").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    closeSettingsDrawer();
+  });
+  settingsOverlay.addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    closeSettingsDrawer();
+  });
+
+  var setAccItems = settingsList.querySelectorAll(".menu-item[data-set-acc]");
+  setAccItems.forEach(function(item) {
+    var rowBtn = item.querySelector(".menu-row");
+    rowBtn.addEventListener("click", function() {
+      playBtnSound(state.snds.b);
+      var wasOpen = item.classList.contains("open");
+      setAccItems.forEach(function(other) {
+        other.classList.remove("open");
+        other.querySelector(".menu-row").classList.remove("shimmer-fill");
+      });
+      if (!wasOpen) {
+        item.classList.add("open");
+        rowBtn.classList.add("shimmer-fill");
+      }
+    });
+  });
+
+  document.getElementById("btn-set-lang").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    state.lang = state.lang === "en" ? "hi" : "en";
+    saveState();
+    autoFillChallengeTitle();
+    renderAllTextAndUI();
+  });
+
+  /* Auto Jap Toggle & Controls */
+  document.getElementById("btn-auto-toggle").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    autoPanelOpen = !autoPanelOpen;
+    renderAutoSection();
+  });
+
+  document.getElementById("btn-tm-switch").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    state.tmon = !state.tmon;
+    timerFinishedMsgVisible = false;
+    saveState();
+    stopAutoAndResetIdle();
+  });
+
+  document.getElementById("btn-tm-minus").addEventListener("click", function() {
+    if (!state.tmon) return;
+    playBtnSound(state.snds.b);
+    state.timer = clampNum(state.timer - 1, 1, 60);
+    timerFinishedMsgVisible = false;
+    saveState();
+    stopAutoAndResetIdle();
+  });
+
+  document.getElementById("btn-tm-plus").addEventListener("click", function() {
+    if (!state.tmon) return;
+    playBtnSound(state.snds.b);
+    state.timer = clampNum(state.timer + 1, 1, 60);
+    timerFinishedMsgVisible = false;
+    saveState();
+    stopAutoAndResetIdle();
+  });
+
+  document.getElementById("btn-auto-start").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    if (autoState === "idle" || autoState === "paused") {
+      startAutoOrResume();
+    } else if (autoState === "running") {
+      pauseAuto();
+    }
+  });
+
+  document.getElementById("btn-auto-stop").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    stopAutoAndResetIdle();
+  });
+
+  /* Undo / Edit / Reset */
+  document.getElementById("btn-undo").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    var sess = getActiveSession();
+    if (sess.count > 0) {
+      sess.count -= 1;
+      var tKey = getTodayKey();
+      if (state.history[tKey] && state.history[tKey] > 0) {
+        state.history[tKey] -= 1;
+      }
+      saveState();
+      renderCountScreen(false);
+      renderHomeTab();
+    }
+  });
+
+  var panelEdit = document.getElementById("panel-edit");
+  document.getElementById("btn-edit").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    var isHidden = panelEdit.classList.contains("hidden");
+    if (isHidden) {
+      var sess = getActiveSession();
+      document.getElementById("inp-edit-name").value = displaySessionName(sess.name);
+      document.getElementById("inp-edit-target").value = sess.target > 0 ? String(sess.target) : "";
+      document.getElementById("inp-edit-count").value = "";
+      panelEdit.classList.remove("hidden");
+    } else {
+      panelEdit.classList.add("hidden");
+    }
+  });
+
+  document.getElementById("btn-edit-cancel").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    panelEdit.classList.add("hidden");
+  });
+
+  document.getElementById("btn-edit-save").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    var sess = getActiveSession();
+    var newName = document.getElementById("inp-edit-name").value.trim().slice(0, 60);
+    if (newName) sess.name = newName;
+    var rawTarg = document.getElementById("inp-edit-target").value.trim();
+    sess.target = rawTarg === "" ? 0 : clampNum(rawTarg, 0, MAX_NUM);
+    var rawCnt = document.getElementById("inp-edit-count").value.trim();
+    if (rawCnt !== "") {
+      sess.count = clampNum(rawCnt, 0, MAX_NUM);
+    }
+    saveState();
+    panelEdit.classList.add("hidden");
+    renderCountScreen(true);
+    renderHomeTab();
+    renderDrawerDynamicLists();
+  });
+
+  var btnReset = document.getElementById("btn-reset");
+  btnReset.addEventListener("click", function() {
+    if (!resetConfirmTimeout) {
+      playBtnSound(state.snds.b);
+      btnReset.textContent = t("rconf");
+      resetConfirmTimeout = setTimeout(function() {
+        resetConfirmTimeout = null;
+        btnReset.textContent = t("reset");
+      }, 3000);
+    } else {
+      clearTimeout(resetConfirmTimeout);
+      resetConfirmTimeout = null;
+      btnReset.textContent = t("reset");
+      playWhoosh();
+      triggerVibrate(60);
+      var sess = getActiveSession();
+      sess.count = 0;
+      saveState();
+      renderCountScreen(true);
+      renderHomeTab();
+      renderDrawerDynamicLists();
+    }
+  });
+
+  /* Backup Code */
+  function toBase64Utf8(str) {
+    var bytes = new TextEncoder().encode(str);
+    var bin = "";
+    for (var i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin);
+  }
+  function fromBase64Utf8(b64) {
+    var bin = atob(b64);
+    var bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder().decode(bytes);
+  }
+
+  document.getElementById("btn-create-bk").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    var payload = {
+      sessions: state.sessions,
+      active: state.active,
+      history: state.history,
+      lang: state.lang,
+      theme: state.theme,
+      style: state.style,
+      snds: state.snds
+    };
+    var code = "NAAM1:" + toBase64Utf8(JSON.stringify(payload));
+    var out = document.getElementById("txt-bk-out");
+    var msg = document.getElementById("ui-bk-msg");
+    out.value = code;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(function() {
+        msg.textContent = t("bkok");
+      }).catch(function() {
+        msg.textContent = t("bkman");
+      });
+    } else {
+      msg.textContent = t("bkman");
+    }
+  });
+
+  /* Restore Data */
+  document.getElementById("btn-do-restore").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    var raw = document.getElementById("txt-rs-in").value.trim();
+    var msg = document.getElementById("ui-rs-msg");
+    if (!raw) {
+      msg.style.color = "var(--danger)";
+      msg.textContent = t("bkempty");
+      return;
+    }
+    if (raw.indexOf("NAAM1:") !== 0) {
+      msg.style.color = "var(--danger)";
+      msg.textContent = t("bkbad");
+      return;
+    }
+    try {
+      var jsonStr = fromBase64Utf8(raw.slice(6));
+      var data = JSON.parse(jsonStr);
+      if (!data || !Array.isArray(data.sessions) || data.sessions.length === 0) {
+        throw new Error("Invalid");
+      }
+      stopAutoAndResetIdle();
+      var countRestored = 0;
+      data.sessions.forEach(function(inc) {
+        if (!inc || typeof inc !== "object") return;
+        var clean = {
+          id: String(inc.id || shortId()),
+          name: String(inc.name || "OM Namah Shivaya").slice(0, 60),
+          challengeTitle: inc.challengeTitle ? String(inc.challengeTitle).slice(0, 60) : "",
+          count: clampNum(inc.count, 0, MAX_NUM),
+          target: inc.target ? clampNum(inc.target, 0, MAX_NUM) : 0,
+          gap: clampGap(inc.gap !== undefined ? inc.gap : 0.8),
+          hrsPerDay: Number(inc.hrsPerDay) > 0 ? Number(inc.hrsPerDay) : 1,
+          isGoal: Boolean(inc.isGoal || inc.target > 0)
+        };
+        var idx = state.sessions.findIndex(function(ex) { return ex.id === clean.id; });
+        if (idx !== -1) state.sessions[idx] = clean;
+        else state.sessions.push(clean);
+        countRestored++;
+      });
+      if (data.history && typeof data.history === "object") {
+        for (var hk in data.history) {
+          state.history[hk] = Math.max(state.history[hk] || 0, clampNum(data.history[hk], 0, MAX_NUM));
+        }
+      }
+      if (data.active && state.sessions.some(function(s) { return s.id === data.active; })) {
+        state.active = data.active;
+      }
+      if (data.lang === "en" || data.lang === "hi") state.lang = data.lang;
+      if (VALID_THEMES.indexOf(data.theme) !== -1) state.theme = data.theme;
+      if (["classic","mala","rud","jyoti","flow","bub"].indexOf(data.style) !== -1) state.style = data.style;
+      if (data.snds && typeof data.snds === "object") {
+        state.snds.c = clampNum(data.snds.c, 0, 99);
+        state.snds.b = clampNum(data.snds.b, 0, 6);
+        state.snds.m = clampNum(data.snds.m, 0, 99);
+      }
+      saveState();
+      renderAllTextAndUI();
+      msg.style.color = "var(--ok)";
+      msg.textContent = t("bkdone") + countRestored;
+    } catch (e) {
+      msg.style.color = "var(--danger)";
+      msg.textContent = t("bkbad");
+    }
+  });
+
+  /* Sound / Vibrate / Wake Toggles */
+  document.getElementById("chip-toggle-vib").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    state.vib = !state.vib;
+    saveState();
+    if (state.vib) triggerVibrate(30);
+    renderAllTextAndUI();
+  });
+  document.getElementById("chip-toggle-snd").addEventListener("click", function() {
+    state.snd = !state.snd;
+    saveState();
+    if (state.snd) {
+      playBtnSound(state.snds.b, true);
+      if (autoState === "running") startAudioKeepAlive();
+    } else {
+      stopAudioKeepAlive();
+    }
+    renderAllTextAndUI();
+  });
+  document.getElementById("chip-toggle-wake").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    state.wake = !state.wake;
+    saveState();
+    updateWakeLock();
+    renderAllTextAndUI();
+  });
+
+  /* Install / PWA handling */
+  var deferredPrompt = null;
+  function isStandaloneMode() {
+    return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true || state.installed;
+  }
+
+  function updateInstallVisibility() {
+    var installed = isStandaloneMode();
+    document.getElementById("btn-install-banner").classList.toggle("hidden", installed);
+    document.getElementById("menu-item-install").classList.toggle("hidden", installed);
+    if (installed) document.getElementById("box-install-steps").classList.add("hidden");
+  }
+
+  window.addEventListener("beforeinstallprompt", function(e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    updateInstallVisibility();
+  });
+
+  window.addEventListener("appinstalled", function() {
+    state.installed = true;
+    saveState();
+    deferredPrompt = null;
+    updateInstallVisibility();
+  });
+
+  function triggerInstallFlow(fromBanner) {
+    playBtnSound(state.snds.b);
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(function(res) {
+        if (res && res.outcome === "accepted") {
+          state.installed = true;
+          saveState();
+          updateInstallVisibility();
+        }
+        deferredPrompt = null;
+      });
+    } else if (fromBanner) {
+      var box = document.getElementById("box-install-steps");
+      box.classList.toggle("hidden");
+    }
+  }
+
+  document.getElementById("btn-install-banner").addEventListener("click", function() {
+    triggerInstallFlow(true);
+  });
+  document.getElementById("btn-menu-install").addEventListener("click", function() {
+    triggerInstallFlow(false);
+  });
+  document.getElementById("btn-close-inst-top").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    document.getElementById("box-install-steps").classList.add("hidden");
+  });
+
+  function copyPageLink(btnEl) {
+    playBtnSound(state.snds.b);
+    var url = location.href;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function() {
+        btnEl.textContent = t("copied");
+        setTimeout(function() { btnEl.textContent = t("copy"); }, 2200);
+      }).catch(function(){});
+    }
+  }
+  document.getElementById("btn-copy-link-top").addEventListener("click", function() {
+    copyPageLink(this);
+  });
+  document.getElementById("btn-menu-copy-link").addEventListener("click", function() {
+    copyPageLink(this);
+  });
+
+  /* Share App */
+  document.getElementById("btn-menu-share").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    var fb = document.getElementById("ui-share-feedback");
+    if (navigator.share) {
+      navigator.share({ title: t("title"), text: t("title"), url: location.href }).catch(function(){});
+    } else if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(location.href).then(function() {
+        fb.textContent = t("copied");
+        setTimeout(function() { fb.textContent = ""; }, 2500);
+      }).catch(function(){});
+    }
+  });
+
+  /* Exit App */
+  document.getElementById("btn-exit-stay").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    closeDrawer();
+  });
+  document.getElementById("btn-exit-confirm").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    stopAutoAndResetIdle();
+    closeDrawer();
+    document.getElementById("exit-screen").classList.add("show");
+  });
+  document.getElementById("btn-back-to-app").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    document.getElementById("exit-screen").classList.remove("show");
+  });
+
+  /* Initial Render & Active Tab */
+  renderAllTextAndUI();
+  switchTab(state.activeTab || "home");
+
+  /* Register Service Worker after load */
+  window.addEventListener("load", function() {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./sw.js").catch(function(){});
+    }
+  });
+})();
+</script>
+</body>
+</html>

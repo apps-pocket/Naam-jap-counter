@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Download Icons</title>
+</head>
+<body style="font-family:system-ui,sans-serif;text-align:center;padding:32px;background:#fff8ee;color:#3b2a14;">
+  <h2>Download Your PWA Icons</h2>
+  <p>Tap either style below to download <b>icon-192.png</b> and <b>icon-512.png</b>:</p>
+
+  <button onclick="downloadPair('#d9791a', '#f4b04a', '#fff8ee')" style="display:block;width:100%;max-width:320px;margin:14px auto;padding:14px 20px;font-size:16px;background:#d9791a;color:#fff;border:none;border-radius:12px;font-weight:bold;cursor:pointer;">
+    🟠 Download Temple Saffron Icons
+  </button>
+
+  <button onclick="downloadPair('#7b112c', '#b83352', '#fdf5ed')" style="display:block;width:100%;max-width:320px;margin:14px auto;padding:14px 20px;font-size:16px;background:#7b112c;color:#fff;border:none;border-radius:12px;font-weight:bold;cursor:pointer;">
+    🔴 Download Royal Maroon Icons (Distinct 2nd App)
+  </button>
+
+  <script>
+    function downloadPair(outerColor, innerColor, bgColor) {
+      [192, 512].forEach((size, idx) => {
+        setTimeout(() => {
+          const c = document.createElement("canvas");
+          c.width = c.height = size;
+          const ctx = c.getContext("2d");
+          const r = size / 2;
+
+          ctx.fillStyle = bgColor;
+          ctx.fillRect(0, 0, size, size);
+
+          ctx.beginPath();
+          ctx.arc(r, r, r * 0.9, 0, Math.PI * 2);
+          ctx.fillStyle = outerColor;
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(r, r, r * 0.72, 0, Math.PI * 2);
+          ctx.fillStyle = innerColor;
+          ctx.fill();
+
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "bold " + Math.round(size * 0.46) + "px system-ui, 'Noto Sans Devanagari', sans-serif";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText("ॐ", r, r + size * 0.03);
+
+          c.toBlob((blob) => {
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "icon-" + size + ".png";
+            a.click();
+          }, "image/png");
+        }, idx * 450);
+      });
+    }
+  </script>
+</body>
+</html>
