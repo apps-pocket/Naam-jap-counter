@@ -1,4 +1,4 @@
-const CACHE_NAME = "naam-counter-shell-v5";
+const CACHE_NAME = "naam-jap-counter-v6";
 const PRECACHE_ASSETS = [
   "./",
   "./index.html",
@@ -9,7 +9,10 @@ const PRECACHE_ASSETS = [
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE_ASSETS))
+    caches.open(CACHE_NAME).then((cache) =>
+      // add files one by one so a single missing file can never break the install
+      Promise.all(PRECACHE_ASSETS.map((url) => cache.add(url).catch(() => null)))
+    )
   );
   self.skipWaiting();
 });
@@ -19,7 +22,8 @@ self.addEventListener("activate", (event) => {
     caches.keys().then((keys) =>
       Promise.all(
         keys.map((key) => {
-          if (key !== CACHE_NAME) return caches.delete(key);
+          // only touch this app's own caches (other apps on the same github.io share the origin)
+          if (key.indexOf("naam-jap-counter-") === 0 && key !== CACHE_NAME) return caches.delete(key);
         })
       )
     )

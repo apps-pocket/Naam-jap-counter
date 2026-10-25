@@ -1,26 +1,20 @@
 {
-  "id": "/naam-jap-counter-v2/",
+  "id": "/Naam-jap-counter/",
   "name": "नाम काउंटर — Naam Counter",
   "short_name": "Naam Counter",
-  "description": "Dedicated offline Naam Jap Counter with Goals, Schedule & 7-Day History",
+  "description": "Naam Jap Counter with goals, schedule and 7-day history. Works offline.",
   "display": "standalone",
   "orientation": "portrait",
-  "start_url": "./?app=naam-counter-v2",
+  "start_url": "./",
   "scope": "./",
-  "background_color": "#fff8ee",
-  "theme_color": "#d9791a",
+  "background_color": "#fffcf5",
+  "theme_color": "#b7791f",
+  "prefer_related_applications": false,
+  "related_applications": [
+    { "platform": "webapp", "url": "https://apps-pocket.github.io/Naam-jap-counter/manifest.json" }
+  ],
   "icons": [
-    {
-      "src": "./icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "./icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
   ]
 }

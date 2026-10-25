@@ -9,6 +9,7 @@
 <title>Naam Counter</title>
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
 <link rel="apple-touch-icon" href="./icon-192.png">
 <style>
 @property --ang {
@@ -1293,8 +1294,10 @@ input, textarea, select {
   <button class="install-banner shimmer-fill hidden" id="btn-install-banner">📲 Install app</button>
   <div class="install-steps-box hidden" id="box-install-steps">
     <div id="ui-inst-steps"></div>
+    <div class="hint-text hidden" id="out-top-check" style="margin-top:8px;line-height:1.7;"></div>
     <div style="margin-top:10px;display:flex;gap:8px;">
       <button class="secondary-btn" id="btn-copy-link-top" style="flex:1;"></button>
+      <button class="secondary-btn" id="btn-check-top" style="flex:1;"></button>
       <button class="secondary-btn" id="btn-close-inst-top">✕</button>
     </div>
   </div>
@@ -1591,6 +1594,8 @@ input, textarea, select {
         <div class="menu-body">
           <div class="hint-text" id="ui-menu-inst-steps"></div>
           <button class="secondary-btn" id="btn-menu-copy-link" style="width:100%;margin-top:8px;"></button>
+          <button class="secondary-btn" id="btn-menu-check" style="width:100%;margin-top:8px;"></button>
+          <div class="hint-text hidden" id="out-menu-check" style="margin-top:8px;line-height:1.7;"></div>
         </div>
       </div>
     </div>
@@ -1788,6 +1793,7 @@ input, textarea, select {
       m_in: "🏠 Add to Home screen",
       m_ex: "🚪 Exit app",
       m_pr: "👤 Profile",
+      chk_btn: "🔍 Check install",
       del_title: "Delete this session?",
       del_msg: "\"{n}\" and its count will be removed. This cannot be undone.",
       cb_yes: "Yes, delete",
@@ -1821,7 +1827,7 @@ input, textarea, select {
       bkbad: "This code is not valid.",
       bkdone: "Restored ✓ Sessions added: ",
       bkempty: "Paste your backup code in the box first.",
-      iand: "<b>Android (Chrome):</b><br>1. Open this page in Chrome.<br>2. Tap the ⋮ menu (top right).<br>3. Tap \"Install app\" or \"Add to Home screen\".",
+      iand: "<b>Android (Chrome):</b><br>1. Open this link directly in Chrome (not inside WhatsApp or another app).<br>2. Tap the ⋮ menu (top right).<br>3. Tap \"Install app\" or \"Add to Home screen\".",
       iios: "<b>iPhone (Safari):</b><br>1. Open this page in Safari.<br>2. Tap the Share button.<br>3. Tap \"Add to Home Screen\".",
       copy: "Copy page link",
       copied: "Link copied ✓",
@@ -1920,6 +1926,7 @@ input, textarea, select {
       m_in: "📲 होम स्क्रीन पर जोड़ें",
       m_ex: "🚪 ऐप बंद करें",
       m_pr: "👤 प्रोफ़ाइल",
+      chk_btn: "🔍 इंस्टॉल जाँचें",
       del_title: "यह सेशन हटाएँ?",
       del_msg: "\"{n}\" और उसकी गिनती हट जाएगी। इसे वापस नहीं किया जा सकेगा।",
       cb_yes: "हाँ, हटाएँ",
@@ -2026,7 +2033,7 @@ input, textarea, select {
     { en: "Hare Krishna", hi: "हरे कृष्ण" }
   ];
 
-  var STORAGE_KEY = "naam-counter-v2";
+  var STORAGE_KEY = "naam-jap-counter-app-v3"; /* own key: other apps on the same github.io share localStorage */
   var MAX_NUM = 1e12;
 
   function shortId() {
@@ -2079,7 +2086,7 @@ input, textarea, select {
 
   function loadState() {
     try {
-      var raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem("naam-counter-v1");
+      var raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem("naam-counter-v2") || localStorage.getItem("naam-counter-v1");
       if (!raw) return;
       var parsed = JSON.parse(raw);
       if (parsed && Array.isArray(parsed.sessions) && parsed.sessions.length > 0) {
@@ -2115,7 +2122,6 @@ input, textarea, select {
         }
         if (parsed.timer !== undefined) state.timer = clampNum(parsed.timer, 1, 60);
         if (typeof parsed.tmon === "boolean") state.tmon = parsed.tmon;
-        if (typeof parsed.installed === "boolean") state.installed = parsed.installed;
         if (["home","jap","schedule","history"].indexOf(parsed.activeTab) !== -1) state.activeTab = parsed.activeTab;
       }
     } catch (e) {}
@@ -4143,6 +4149,8 @@ input, textarea, select {
     document.getElementById("ui-menu-inst-steps").innerHTML = stepsHtml;
     document.getElementById("btn-copy-link-top").textContent = t("copy");
     document.getElementById("btn-menu-copy-link").textContent = t("copy");
+    document.getElementById("btn-menu-check").textContent = t("chk_btn");
+    document.getElementById("btn-check-top").textContent = t("chk_btn");
     document.getElementById("btn-menu-install").textContent = t("inst2");
 
     document.getElementById("ui-exq").textContent = t("exq");
@@ -4570,10 +4578,52 @@ input, textarea, select {
 
   window.addEventListener("appinstalled", function() {
     state.installed = true;
-    saveState();
     deferredPrompt = null;
     updateInstallVisibility();
   });
+
+  /* If the app is already installed on this phone, hide the install options */
+  if (navigator.getInstalledRelatedApps) {
+    navigator.getInstalledRelatedApps().then(function(list) {
+      if (list && list.length > 0 && !window.matchMedia("(display-mode: standalone)").matches) {
+        state.installed = true;
+        updateInstallVisibility();
+      }
+    }).catch(function() {});
+  }
+
+  /* Install checker: shows exactly what is missing */
+  function runInstallCheck(outEl) {
+    outEl.classList.remove("hidden");
+    outEl.innerHTML = "…";
+    var rows = [];
+    function add(ok, text) { rows.push((ok ? "✅ " : "❌ ") + text); outEl.innerHTML = rows.join("<br>"); }
+    add(location.protocol === "https:" || location.hostname === "localhost", "HTTPS link: " + location.protocol);
+    var isApp = window.matchMedia("(display-mode: standalone)").matches;
+    rows.push((isApp ? "✅ " : "ℹ️ ") + "Opened as installed app: " + (isApp ? "yes" : "no (normal browser tab)"));
+    add(!!deferredPrompt, "Chrome install prompt ready: " + (deferredPrompt ? "yes" : "not yet (see ⋮ menu)"));
+    var link = document.querySelector('link[rel="manifest"]');
+    if (!link) { add(false, "manifest link missing"); return; }
+    fetch(link.href, { cache: "no-store" }).then(function(r) {
+      add(r.ok, "manifest.json: " + (r.ok ? "found" : "NOT found (" + r.status + ")"));
+      return r.ok ? r.json() : null;
+    }).then(function(m) {
+      if (!m) return;
+      (m.icons || []).forEach(function(ic) {
+        var u = new URL(ic.src, link.href).href;
+        fetch(u, { cache: "no-store" }).then(function(r) {
+          add(r.ok, ic.src + " (" + ic.sizes + "): " + (r.ok ? "found" : "NOT found (" + r.status + ")"));
+        }).catch(function() { add(false, ic.src + ": cannot load"); });
+      });
+    }).catch(function() { add(false, "manifest.json could not be read"); });
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.getRegistration().then(function(reg) {
+        add(!!reg, "Service worker: " + (reg ? (reg.active ? "running" : "installing") : "not registered (sw.js missing?)"));
+      });
+    } else {
+      add(false, "Service worker not supported in this browser");
+    }
+  }
 
   function triggerInstallFlow(fromBanner) {
     playBtnSound(state.snds.b);
@@ -4582,7 +4632,6 @@ input, textarea, select {
       deferredPrompt.userChoice.then(function(res) {
         if (res && res.outcome === "accepted") {
           state.installed = true;
-          saveState();
           updateInstallVisibility();
         }
         deferredPrompt = null;
@@ -4603,6 +4652,14 @@ input, textarea, select {
   });
   document.getElementById("btn-menu-install").addEventListener("click", function() {
     triggerInstallFlow(false);
+  });
+  document.getElementById("btn-menu-check").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    runInstallCheck(document.getElementById("out-menu-check"));
+  });
+  document.getElementById("btn-check-top").addEventListener("click", function() {
+    playBtnSound(state.snds.b);
+    runInstallCheck(document.getElementById("out-top-check"));
   });
   document.getElementById("btn-close-inst-top").addEventListener("click", function() {
     playBtnSound(state.snds.b);
