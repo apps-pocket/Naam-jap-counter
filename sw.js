@@ -1,4 +1,4 @@
-const CACHE_NAME = "naam-counter-shell-v2";
+const CACHE_NAME = "naam-counter-shell-v5";
 const PRECACHE_ASSETS = [
   "./",
   "./index.html",

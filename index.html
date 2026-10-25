@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="saffron">
+<html lang="en" data-theme="golden_mandir">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#d9791a" id="meta-theme">
+<meta name="theme-color" content="#b7791f" id="meta-theme">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Naam Counter</title>
@@ -151,7 +151,6 @@ input, textarea, select {
   overflow: hidden;
   background: linear-gradient(105deg, var(--accent) 0%, var(--accent2) 50%, var(--accent) 100%) !important;
   background-size: 220% 100% !important;
-  animation: shimmerBg 2.8s linear infinite;
   color: #ffffff !important;
   border-color: var(--accent) !important;
   text-shadow: 0 1px 2px rgba(0,0,0,0.28);
@@ -165,8 +164,7 @@ input, textarea, select {
   width: 48%;
   background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.48) 50%, rgba(255,255,255,0) 100%);
   transform: translateX(-140%) skewX(-22deg);
-  animation: glossSweep 2.8s ease-in-out infinite;
-  pointer-events: none;
+    pointer-events: none;
 }
 
 .rot-shimmer {
@@ -176,11 +174,54 @@ input, textarea, select {
   animation: spin 2s linear infinite;
 }
 
+/* Timed shimmer: JS adds .shimmer-play once per cycle (upper/lower 10s, middle 5s) */
+.shimmer-play::after {
+  animation: glossSweep 1.4s ease-in-out 1 both !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .shimmer-fill, .shimmer-fill::after, .rot-shimmer, .diya-flame-anim {
+  .shimmer-play::after, .shimmer-fill, .shimmer-fill::after, .rot-shimmer, .diya-flame-anim {
     animation: none !important;
   }
 }
+
+
+/* ===== Left menu: 4 cards ===== */
+.drawer-list { padding: 10px 10px 18px; background: var(--bg); }
+.menu-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.menu-card > .menu-item:last-child { border-bottom: none; }
+.menu-card .install-main-btn { width: calc(100% - 24px); margin: 12px 12px 6px; }
+.profile-welcome { font-size: 14px; line-height: 1.65; white-space: pre-line; color: var(--ink); }
+.speed-info {
+  margin: 8px 0 2px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--bg);
+  border: 1px dashed var(--accent);
+  color: var(--ink);
+  font-size: 12.5px;
+  font-weight: 600;
+  text-align: center;
+}
+.cg-preview {
+  margin-top: 10px;
+  padding: 9px 11px;
+  border-radius: 10px;
+  background: var(--bg);
+  border: 1px dashed var(--accent);
+  font-size: 12.5px;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+
 
 /* Header */
 .header {
@@ -477,14 +518,20 @@ input, textarea, select {
   width: 45%;
   background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.38) 50%, rgba(255,255,255,0) 100%);
   transform: translateX(-140%) skewX(-22deg);
-  animation: glossSweep 2.8s ease-in-out infinite;
-  pointer-events: none;
+    pointer-events: none;
 }
-.tap-btn.style-mala, .tap-btn.style-rud {
+.tap-btn.style-mala, .tap-btn.style-rud, .tap-btn.style-tulsi, .tap-btn.style-lotus, .tap-btn.style-chakra {
   border-radius: 50%;
-  box-shadow: 0 10px 28px rgba(0,0,0,0.12);
+  background: transparent;
+  box-shadow: none;
 }
-.tap-btn.style-jyoti, .tap-btn.style-bub {
+.tap-btn.style-jyoti {
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+.tap-btn.style-bub {
   border-radius: 50%;
   border: 3px solid var(--accent);
   background: radial-gradient(circle, var(--card), var(--bg));
@@ -512,28 +559,26 @@ input, textarea, select {
   color: #fff;
   font-size: 22px;
 }
-.style-mala .tap-label, .style-rud .tap-label {
+.style-mala .tap-label, .style-rud .tap-label, .style-chakra .tap-label {
   background: linear-gradient(105deg, var(--accent), var(--accent2), var(--accent));
   background-size: 220% 100%;
-  animation: shimmerBg 2.8s linear infinite;
   color: #fff;
   border-radius: 22px;
   padding: 7px 18px;
   font-size: 15px;
   box-shadow: 0 3px 10px rgba(0,0,0,0.2);
 }
-.style-jyoti .tap-label, .style-flow .tap-label, .style-bub .tap-label {
+.style-jyoti .tap-label, .style-flow .tap-label, .style-bub .tap-label, .style-lotus .tap-label, .style-tulsi .tap-label {
   bottom: 14px;
   background: linear-gradient(105deg, var(--accent), var(--accent2), var(--accent));
   background-size: 220% 100%;
-  animation: shimmerBg 2.8s linear infinite;
   color: #fff;
   border-radius: 22px;
   padding: 7px 18px;
   font-size: 14px;
   box-shadow: 0 3px 10px rgba(0,0,0,0.2);
 }
-.style-mala .tap-label::after, .style-rud .tap-label::after,
+.style-mala .tap-label::after, .style-rud .tap-label::after, .style-tulsi .tap-label::after, .style-lotus .tap-label::after, .style-chakra .tap-label::after,
 .style-jyoti .tap-label::after, .style-flow .tap-label::after, .style-bub .tap-label::after {
   content: "";
   position: absolute;
@@ -543,8 +588,7 @@ input, textarea, select {
   width: 48%;
   background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.48) 50%, rgba(255,255,255,0) 100%);
   transform: translateX(-140%) skewX(-22deg);
-  animation: glossSweep 2.8s ease-in-out infinite;
-  pointer-events: none;
+    pointer-events: none;
 }
 
 /* Auto Jap */
@@ -1188,6 +1232,25 @@ input, textarea, select {
   border-color: var(--danger);
 }
 
+/* Confirm popup (center) */
+.confirm-overlay {
+  position: fixed; inset: 0; z-index: 60;
+  background: rgba(0,0,0,0.5);
+  display: none; align-items: center; justify-content: center; padding: 20px;
+}
+.confirm-overlay.open { display: flex; }
+.confirm-box {
+  width: min(92vw, 340px);
+  background: var(--card); color: var(--ink);
+  border: 1px solid var(--accent); border-radius: 18px;
+  padding: 20px 18px 16px; text-align: center;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.35);
+}
+.confirm-box .cb-ico { font-size: 34px; margin-bottom: 6px; }
+.confirm-box .cb-title { font-size: 17px; font-weight: 800; margin-bottom: 6px; }
+.confirm-box .cb-msg { font-size: 13.5px; color: var(--mute); line-height: 1.5; margin-bottom: 16px; word-break: break-word; }
+.confirm-box .cb-row { display: flex; gap: 10px; }
+
 /* Exit Overlay */
 .exit-screen {
   position: fixed;
@@ -1222,7 +1285,7 @@ input, textarea, select {
   <!-- Header -->
   <header class="header">
     <button class="icon-btn" id="btn-menu" aria-label="Menu">☰</button>
-    <h1 class="app-title" id="ui-title">🙏 Naam Counter</h1>
+    <h1 class="app-title" id="ui-title">Naam Counter</h1>
     <button class="icon-btn" id="btn-settings-top" aria-label="Settings">⚙️</button>
   </header>
 
@@ -1417,6 +1480,11 @@ input, textarea, select {
       <div class="chips-wrap" id="cg-naam-chips"></div>
       <input type="text" class="text-input hidden" id="inp-cg-custom-naam" maxlength="60" placeholder="Type custom Naam" style="margin-top:6px;">
 
+      <div class="field-label" id="ui-cg-spd-lbl">Speed: seconds per naam</div>
+      <div class="chips-wrap" id="cg-spd-chips"></div>
+      <input type="number" class="text-input hidden" id="inp-cg-custom-spd" placeholder="e.g. 0.8" step="0.1" min="0.2" max="10" style="margin-top:6px;">
+      <div class="cg-preview" id="ui-cg-prev"></div>
+
       <button class="primary-btn shimmer-fill" id="btn-create-goal-submit" style="margin-top:16px;font-size:16px;">
         🚀 Create Goal
       </button>
@@ -1480,60 +1548,63 @@ input, textarea, select {
     <button class="icon-btn" id="btn-drawer-close" style="width:40px;height:40px;">✕</button>
   </div>
   <div class="drawer-list" id="drawer-list">
-    <!-- 1. Old counts / sessions -->
-    <div class="menu-item" data-acc="old">
-      <button class="menu-row"><span id="m-txt-old">📂 Old counts / sessions</span><span class="menu-chevron">▸</span></button>
-      <div class="menu-body" id="old-sessions-list"></div>
-    </div>
 
-    <!-- 2. Backup code -->
-    <div class="menu-item" data-acc="bk">
-      <button class="menu-row"><span id="m-txt-bk">💾 Backup code</span><span class="menu-chevron">▸</span></button>
-      <div class="menu-body">
-        <div class="hint-text" id="ui-bkh"></div>
-        <button class="primary-btn shimmer-fill" id="btn-create-bk" style="margin:8px 0;"></button>
-        <textarea class="area-input" id="txt-bk-out" readonly></textarea>
-        <div class="hint-text" id="ui-bk-msg" style="color:var(--ok);font-weight:600;"></div>
+    <!-- CARD 1: Profile + Old counts / sessions -->
+    <div class="menu-card">
+      <div class="menu-item" data-acc="pr">
+        <button class="menu-row"><span id="m-txt-pr">👤 Profile</span><span class="menu-chevron">▸</span></button>
+        <div class="menu-body"><div class="profile-welcome" id="ui-profile-welcome"></div></div>
+      </div>
+      <div class="menu-item" data-acc="old">
+        <button class="menu-row"><span id="m-txt-old">📂 Old counts / sessions</span><span class="menu-chevron">▸</span></button>
+        <div class="menu-body" id="old-sessions-list"></div>
       </div>
     </div>
 
-    <!-- 3. Restore data -->
-    <div class="menu-item" data-acc="rs">
-      <button class="menu-row"><span id="m-txt-rs">📥 Restore data</span><span class="menu-chevron">▸</span></button>
-      <div class="menu-body">
-        <div class="hint-text" id="ui-rsh"></div>
-        <textarea class="area-input" id="txt-rs-in" style="margin:8px 0;"></textarea>
-        <button class="primary-btn shimmer-fill" id="btn-do-restore"></button>
-        <div class="hint-text" id="ui-rs-msg" style="font-weight:700;margin-top:8px;"></div>
+    <!-- CARD 2: Backup + Restore -->
+    <div class="menu-card">
+      <div class="menu-item" data-acc="bk">
+        <button class="menu-row"><span id="m-txt-bk">💾 Backup code</span><span class="menu-chevron">▸</span></button>
+        <div class="menu-body">
+          <div class="hint-text" id="ui-bkh"></div>
+          <button class="primary-btn shimmer-fill" id="btn-create-bk" style="margin:8px 0;"></button>
+          <textarea class="area-input" id="txt-bk-out" readonly></textarea>
+          <div class="hint-text" id="ui-bk-msg" style="color:var(--ok);font-weight:600;"></div>
+        </div>
+      </div>
+      <div class="menu-item" data-acc="rs">
+        <button class="menu-row"><span id="m-txt-rs">📥 Restore data</span><span class="menu-chevron">▸</span></button>
+        <div class="menu-body">
+          <div class="hint-text" id="ui-rsh"></div>
+          <textarea class="area-input" id="txt-rs-in" style="margin:8px 0;"></textarea>
+          <button class="primary-btn shimmer-fill" id="btn-do-restore"></button>
+          <div class="hint-text" id="ui-rs-msg" style="font-weight:700;margin-top:8px;"></div>
+        </div>
       </div>
     </div>
 
-    <!-- 4. Add to Home screen -->
-    <div class="menu-item" data-acc="in" id="menu-item-install">
-      <button class="menu-row"><span id="m-txt-in">📲 Add to Home screen</span><span class="menu-chevron">▸</span></button>
-      <div class="menu-body">
-        <button class="primary-btn shimmer-fill" id="btn-menu-install" style="margin-bottom:10px;"></button>
-        <div class="hint-text" id="ui-menu-inst-steps"></div>
-        <button class="secondary-btn" id="btn-menu-copy-link" style="width:100%;margin-top:8px;"></button>
+    <!-- CARD 3: Install app + Add to Home screen (hidden once installed) -->
+    <div class="menu-card" id="menu-item-install">
+      <button class="primary-btn shimmer-fill install-main-btn" id="btn-menu-install"></button>
+      <div class="menu-item" data-acc="in">
+        <button class="menu-row"><span id="m-txt-in">🏠 Add to Home screen</span><span class="menu-chevron">▸</span></button>
+        <div class="menu-body">
+          <div class="hint-text" id="ui-menu-inst-steps"></div>
+          <button class="secondary-btn" id="btn-menu-copy-link" style="width:100%;margin-top:8px;"></button>
+        </div>
       </div>
     </div>
 
-    <!-- 5. Share app (Direct row) -->
-    <div class="menu-item">
-      <button class="menu-row" id="btn-menu-share">
-        <span id="m-txt-sh">📤 Share app</span>
-        <span id="ui-share-feedback" style="font-size:12.5px;color:var(--ok);"></span>
-      </button>
-    </div>
-
-    <!-- 6. Exit app -->
-    <div class="menu-item" data-acc="ex">
-      <button class="menu-row"><span id="m-txt-ex">🚪 Exit app</span><span class="menu-chevron">▸</span></button>
-      <div class="menu-body">
-        <div style="font-weight:700;margin-bottom:10px;" id="ui-exq">Close the app?</div>
-        <div style="display:flex;gap:8px;">
-          <button class="secondary-btn" id="btn-exit-stay" style="flex:1;">Stay</button>
-          <button class="primary-btn" id="btn-exit-confirm" style="flex:1;background:var(--danger);">Exit app</button>
+    <!-- CARD 4: Exit app -->
+    <div class="menu-card">
+      <div class="menu-item" data-acc="ex">
+        <button class="menu-row"><span id="m-txt-ex">🚪 Exit app</span><span class="menu-chevron">▸</span></button>
+        <div class="menu-body">
+          <div style="font-weight:700;margin-bottom:10px;" id="ui-exq">Close the app?</div>
+          <div style="display:flex;gap:8px;">
+            <button class="secondary-btn" id="btn-exit-stay" style="flex:1;">Stay</button>
+            <button class="primary-btn" id="btn-exit-confirm" style="flex:1;background:var(--danger);">Exit app</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1603,6 +1674,19 @@ input, textarea, select {
   </div>
 </aside>
 
+<!-- Center confirmation popup -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box" role="dialog" aria-modal="true">
+    <div class="cb-ico">🗑️</div>
+    <div class="cb-title" id="ui-cb-title"></div>
+    <div class="cb-msg" id="ui-cb-msg"></div>
+    <div class="cb-row">
+      <button class="secondary-btn" id="btn-cb-no" style="flex:1;"></button>
+      <button class="primary-btn" id="btn-cb-yes" style="flex:1;background:var(--danger);"></button>
+    </div>
+  </div>
+</div>
+
 <!-- Full-screen Exit Thank-You Page -->
 <div class="exit-screen" id="exit-screen">
   <div style="font-size:46px;margin-bottom:12px;">🙏</div>
@@ -1618,7 +1702,7 @@ input, textarea, select {
   /* UI Strings - English & Hindi */
   var STRINGS = {
     en: {
-      title: "🙏 Naam Counter",
+      title: "Naam Counter",
       nav_home: "Home",
       nav_jap: "My Jap",
       nav_sched: "Schedule",
@@ -1701,8 +1785,20 @@ input, textarea, select {
       m_bk: "💾 Backup code",
       m_lang: "🌐 Language",
       m_rs: "📥 Restore data",
-      m_in: "📲 Add to Home screen",
+      m_in: "🏠 Add to Home screen",
       m_ex: "🚪 Exit app",
+      m_pr: "👤 Profile",
+      del_title: "Delete this session?",
+      del_msg: "\"{n}\" and its count will be removed. This cannot be undone.",
+      cb_yes: "Yes, delete",
+      cb_no: "Cancel",
+      s_lotus: "Lotus Bloom",
+      s_tulsi: "Tulsi Wreath",
+      s_chakra: "Sudarshan Chakra",
+      pr_welcome: "🙏 Welcome to Naam Counter!\n\nYour profile will be available here soon. Later you will be able to add your name, Gmail and more details.",
+      cg_spd_lbl: "Speed: seconds per naam (count per second)",
+      cg_prev: "At this speed: {tot} total · about {days} day(s) at {h} hr/day",
+      spd_info: "⏱ {g} sec/naam = {pm} naam/min · {ph} naam/hour",
       th_colors: "Select Theme",
       th_style: "Counter Style",
       s_classic: "Classic",
@@ -1738,7 +1834,7 @@ input, textarea, select {
       novib: "Vibration isn't supported on this device/browser (e.g. iPhone). Turn on Sound for tap feedback."
     },
     hi: {
-      title: "🙏 नाम काउंटर",
+      title: "नाम काउंटर",
       nav_home: "होम",
       nav_jap: "मेरा जाप",
       nav_sched: "शेड्यूल",
@@ -1823,6 +1919,18 @@ input, textarea, select {
       m_rs: "📥 डेटा रीस्टोर",
       m_in: "📲 होम स्क्रीन पर जोड़ें",
       m_ex: "🚪 ऐप बंद करें",
+      m_pr: "👤 प्रोफ़ाइल",
+      del_title: "यह सेशन हटाएँ?",
+      del_msg: "\"{n}\" और उसकी गिनती हट जाएगी। इसे वापस नहीं किया जा सकेगा।",
+      cb_yes: "हाँ, हटाएँ",
+      cb_no: "रद्द करें",
+      s_lotus: "कमल पुष्प",
+      s_tulsi: "तुलसी माला",
+      s_chakra: "सुदर्शन चक्र",
+      pr_welcome: "🙏 नाम काउंटर में आपका स्वागत है!\n\nआपकी प्रोफ़ाइल जल्द ही यहाँ उपलब्ध होगी। बाद में आप अपना नाम, Gmail और अन्य जानकारी जोड़ सकेंगे।",
+      cg_spd_lbl: "गति: प्रति नाम सेकंड (गिनती प्रति सेकंड)",
+      cg_prev: "इस गति पर: कुल {tot} · लगभग {days} दिन ({h} घंटा/दिन)",
+      spd_info: "⏱ {g} सेकंड/नाम = {pm} नाम/मिनट · {ph} नाम/घंटा",
       th_colors: "थीम चुनें",
       th_style: "काउंटर स्टाइल",
       s_classic: "क्लासिक",
@@ -1949,7 +2057,7 @@ input, textarea, select {
   var firstId = shortId();
   var state = {
     sessions: [
-      { id: firstId, name: "OM Namah Shivaya", challengeTitle: "1,080 Naam Jap Challenge", count: 0, target: 1080, gap: 0.8, hrsPerDay: 1, isGoal: true }
+      { id: firstId, name: "OM Namah Shivaya", challengeTitle: "1008 Naam Jap Challenge", count: 0, target: 1008, gap: 0.8, hrsPerDay: 1, isGoal: true }
     ],
     active: firstId,
     history: {},
@@ -1957,9 +2065,9 @@ input, textarea, select {
     snd: true,
     wake: true,
     lang: "en",
-    theme: "saffron",
+    theme: "golden_mandir",
     style: "bub",
-    snds: { c: 1, b: 1, m: 3 },
+    snds: { c: 1, b: 4, m: 3 },
     customSnds: { c: null, m: null },
     timer: 5,
     tmon: false,
@@ -1995,7 +2103,7 @@ input, textarea, select {
         if (typeof parsed.wake === "boolean") state.wake = parsed.wake;
         if (parsed.lang === "en" || parsed.lang === "hi") state.lang = parsed.lang;
         if (VALID_THEMES.indexOf(parsed.theme) !== -1) state.theme = parsed.theme;
-        if (["classic","mala","rud","jyoti","flow","bub"].indexOf(parsed.style) !== -1) state.style = parsed.style;
+        if (["classic","mala","rud","jyoti","flow","bub","lotus","tulsi","chakra"].indexOf(parsed.style) !== -1) state.style = parsed.style;
         if (parsed.snds && typeof parsed.snds === "object") {
           state.snds.c = clampNum(parsed.snds.c, 0, 99);
           state.snds.b = clampNum(parsed.snds.b, 0, 6);
@@ -2386,6 +2494,7 @@ input, textarea, select {
   var currentBuiltStyle = null;
   var styleElements = [];
   var jyotiScaleGroup = null;
+  var jyotiRing = null;
   var lastLitCount = -1;
 
   function calcLitCount(count) {
@@ -2404,6 +2513,7 @@ input, textarea, select {
     svgEl.innerHTML = "";
     styleElements = [];
     jyotiScaleGroup = null;
+    jyotiRing = null;
     lastLitCount = -1;
     currentBuiltStyle = style;
 
@@ -2420,20 +2530,20 @@ input, textarea, select {
       for (var i = 0; i < 108; i++) {
         var angDeg = 90 + (i + 1) * (360 / 109);
         var rad = angDeg * Math.PI / 180;
-        var cx = 130 + 108 * Math.cos(rad);
-        var cy = 118 + 108 * Math.sin(rad);
+        var cx = 130 + 118 * Math.cos(rad);
+        var cy = 128 + 118 * Math.sin(rad);
         var c = createSvgNode("circle", { cx: cx.toFixed(2), cy: cy.toFixed(2), r: rBead });
         svgEl.appendChild(c);
         styleElements.push(c);
       }
       var guru = createSvgNode("circle", {
-        cx: 130, cy: 226, r: 7,
+        cx: 130, cy: 246, r: 7,
         fill: isRud ? "#7e3318" : "#a9672b",
         stroke: isRud ? "#3a140a" : "none",
         "stroke-width": isRud ? "1.2" : "0"
       });
       var tassel = createSvgNode("polygon", {
-        points: "130,234 123,252 137,252",
+        points: "130,253 124,265 136,265",
         fill: isRud ? "#b5361b" : "#a9672b"
       });
       svgEl.appendChild(guru);
@@ -2450,16 +2560,19 @@ input, textarea, select {
       defs.appendChild(rg);
       svgEl.appendChild(defs);
 
-      var rootG = createSvgNode("g", { transform: "translate(130,14) scale(0.8) translate(-130,-14)" });
-      for (var k = 0; k < 108; k++) {
-        var aDeg = 90 + (k + 1) * (360 / 109);
-        var aRad = aDeg * Math.PI / 180;
-        var rx = 130 + 106 * Math.cos(aRad);
-        var ry = 130 + 106 * Math.sin(aRad);
-        var dot = createSvgNode("circle", { cx: rx.toFixed(1), cy: ry.toFixed(1), r: 2.6 });
-        rootG.appendChild(dot);
-        styleElements.push(dot);
-      }
+      var rootG = createSvgNode("g", { transform: "translate(130,14) scale(0.95) translate(-130,-14)" });
+      /* Progress ring = final border; fills up to 108, then restarts from empty */
+      var ringC = 2 * Math.PI * 122;
+      var ringTrack = createSvgNode("circle", { cx: 130, cy: 135, r: 122, fill: "none", stroke: "var(--line)", "stroke-width": 6 });
+      jyotiRing = createSvgNode("circle", {
+        cx: 130, cy: 135, r: 122, fill: "none", stroke: "var(--accent)", "stroke-width": 6, "stroke-linecap": "round",
+        "stroke-dasharray": ringC.toFixed(2), "stroke-dashoffset": ringC.toFixed(2),
+        transform: "rotate(-90 130 135)"
+      });
+      jyotiRing.setAttribute("data-c", ringC.toFixed(2));
+      svgEl.appendChild(ringTrack);
+      svgEl.appendChild(jyotiRing);
+
       var glow = createSvgNode("circle", { cx: 130, cy: 115, r: 68, fill: "url(#glowGrad)" });
       rootG.appendChild(glow);
 
@@ -2478,6 +2591,64 @@ input, textarea, select {
       rootG.appendChild(bowl);
       rootG.appendChild(rim);
       svgEl.appendChild(rootG);
+    } else if (style === "lotus") {
+      var rings = [ { n: 12, r: 22, rx: 4.5, ry: 9 }, { n: 18, r: 45, rx: 5.5, ry: 12 }, { n: 24, r: 70, rx: 6, ry: 13 }, { n: 54, r: 108, rx: 4.2, ry: 10 } ];
+      rings.forEach(function(rg, ri) {
+        for (var q = 0; q < rg.n; q++) {
+          var th = -90 + (q + (ri % 2 ? 0.5 : 0)) * 360 / rg.n;
+          var thr = th * Math.PI / 180;
+          var px = 130 + rg.r * Math.cos(thr);
+          var py = 135 + rg.r * Math.sin(thr);
+          var pet = createSvgNode("ellipse", {
+            cx: px.toFixed(2), cy: py.toFixed(2), rx: rg.rx, ry: rg.ry,
+            transform: "rotate(" + (th - 90).toFixed(2) + " " + px.toFixed(2) + " " + py.toFixed(2) + ")"
+          });
+          svgEl.appendChild(pet);
+          styleElements.push(pet);
+        }
+      });
+      svgEl.appendChild(createSvgNode("circle", { cx: 130, cy: 135, r: 8, fill: "#f4b04a" }));
+    } else if (style === "tulsi") {
+      svgEl.appendChild(createSvgNode("circle", { cx: 130, cy: 135, r: 98, fill: "none", stroke: "var(--line)", "stroke-width": 1.5 }));
+      for (var lf = 0; lf < 108; lf++) {
+        var lth = -90 + lf * 360 / 108;
+        var lr = lth * Math.PI / 180;
+        var lx = 130 + 114 * Math.cos(lr);
+        var ly = 135 + 114 * Math.sin(lr);
+        var leaf = createSvgNode("ellipse", {
+          cx: lx.toFixed(2), cy: ly.toFixed(2), rx: 3.3, ry: 7.5,
+          transform: "rotate(" + (lth - 90).toFixed(2) + " " + lx.toFixed(2) + " " + ly.toFixed(2) + ")"
+        });
+        svgEl.appendChild(leaf);
+        styleElements.push(leaf);
+      }
+      var tulsiTxt = createSvgNode("text", { x: 130, y: 160, "text-anchor": "middle", "font-size": 72 });
+      tulsiTxt.textContent = "🌿";
+      svgEl.appendChild(tulsiTxt);
+    } else if (style === "chakra") {
+      svgEl.appendChild(createSvgNode("circle", { cx: 130, cy: 135, r: 100, fill: "none", stroke: "var(--accent2)", "stroke-width": 2.5 }));
+      svgEl.appendChild(createSvgNode("circle", { cx: 130, cy: 135, r: 62, fill: "none", stroke: "var(--line)", "stroke-width": 2 }));
+      for (var sp = 0; sp < 12; sp++) {
+        var spr = (sp * 30) * Math.PI / 180;
+        svgEl.appendChild(createSvgNode("line", {
+          x1: (130 + 18 * Math.cos(spr)).toFixed(2), y1: (135 + 18 * Math.sin(spr)).toFixed(2),
+          x2: (130 + 100 * Math.cos(spr)).toFixed(2), y2: (135 + 100 * Math.sin(spr)).toFixed(2),
+          stroke: "var(--line)", "stroke-width": 2
+        }));
+      }
+      svgEl.appendChild(createSvgNode("circle", { cx: 130, cy: 135, r: 14, fill: "var(--accent2)" }));
+      for (var tt = 0; tt < 108; tt++) {
+        var ta = (-90 + tt * 360 / 108) * Math.PI / 180;
+        var hw = 0.0265;
+        var p1 = [130 + 106 * Math.cos(ta - hw), 135 + 106 * Math.sin(ta - hw)];
+        var p2 = [130 + 106 * Math.cos(ta + hw), 135 + 106 * Math.sin(ta + hw)];
+        var p3 = [130 + 124 * Math.cos(ta), 135 + 124 * Math.sin(ta)];
+        var tooth = createSvgNode("polygon", {
+          points: p1[0].toFixed(2) + "," + p1[1].toFixed(2) + " " + p2[0].toFixed(2) + "," + p2[1].toFixed(2) + " " + p3[0].toFixed(2) + "," + p3[1].toFixed(2)
+        });
+        svgEl.appendChild(tooth);
+        styleElements.push(tooth);
+      }
     } else if (style === "flow") {
       for (var r = 0; r < 9; r++) {
         for (var col = 0; col < 12; col++) {
@@ -2509,6 +2680,13 @@ input, textarea, select {
         styleElements.push(bub);
       }
     }
+
+    /* Lotus / Tulsi / Diya: lift artwork up so the TAP capsule (bottom) never overlaps it */
+    if (style === "lotus" || style === "tulsi" || style === "jyoti") {
+      var liftG = createSvgNode("g", { transform: "translate(130,106) scale(0.8) translate(-130,-135)" });
+      while (svgEl.firstChild) liftG.appendChild(svgEl.firstChild);
+      svgEl.appendChild(liftG);
+    }
   }
 
   function applyBeadVisual(index, isLit, style) {
@@ -2523,6 +2701,14 @@ input, textarea, select {
     } else if (style === "jyoti") {
       el.setAttribute("fill", isLit ? "#ff9f1c" : "var(--line)");
     } else if (style === "flow") {
+      el.setAttribute("fill", isLit ? "var(--accent)" : "var(--line)");
+    } else if (style === "lotus") {
+      el.setAttribute("fill", isLit ? "#e8618c" : "var(--line)");
+      el.setAttribute("stroke", isLit ? "#b83a66" : "none");
+      el.setAttribute("stroke-width", isLit ? "0.8" : "0");
+    } else if (style === "tulsi") {
+      el.setAttribute("fill", isLit ? "#2e9b57" : "var(--line)");
+    } else if (style === "chakra") {
       el.setAttribute("fill", isLit ? "var(--accent)" : "var(--line)");
     } else if (style === "bub") {
       el.setAttribute("fill", isLit ? "var(--accent2)" : "none");
@@ -2548,6 +2734,10 @@ input, textarea, select {
     }
     lastLitCount = newLit;
 
+    if (style === "jyoti" && jyotiRing) {
+      var rc = parseFloat(jyotiRing.getAttribute("data-c"));
+      jyotiRing.setAttribute("stroke-dashoffset", (rc * (1 - newLit / 108)).toFixed(2));
+    }
     if (style === "jyoti" && jyotiScaleGroup) {
       var sc = 0.55 + (newLit / 108) * 0.45;
       jyotiScaleGroup.setAttribute("transform", "translate(130, 175) scale(" + sc.toFixed(3) + ") translate(-130, -175)");
@@ -2616,9 +2806,13 @@ input, textarea, select {
     slWrap.appendChild(track);
     slWrap.appendChild(scale);
 
+    var infoEl = document.createElement("div");
+    infoEl.className = "speed-info";
+
     mountEl.appendChild(row);
     mountEl.appendChild(grid);
     mountEl.appendChild(slWrap);
+    mountEl.appendChild(infoEl);
 
     btnMin.addEventListener("click", function() {
       playBtnSound(state.snds.b);
@@ -2679,7 +2873,17 @@ input, textarea, select {
       }
     });
 
-    speedWidgets.push({ inp: inp, presetBtns: presetBtns, fill: fill, thumb: thumb });
+    speedWidgets.push({ inp: inp, presetBtns: presetBtns, fill: fill, thumb: thumb, info: infoEl });
+  }
+
+  function speedInfoText(gap) {
+    var g = Math.max(0.2, Number(gap) || 1);
+    var pm = Math.floor(60 / g + 0.0001);
+    var ph = Math.floor(3600 / g + 0.0001);
+    return t("spd_info")
+      .replace("{g}", String(Math.round(g * 10) / 10))
+      .replace("{pm}", pm.toLocaleString("en-IN"))
+      .replace("{ph}", ph.toLocaleString("en-IN"));
   }
 
   function syncSpeedWidgets() {
@@ -2693,6 +2897,7 @@ input, textarea, select {
       w.fill.style.width = pct.toFixed(2) + "%";
       w.thumb.style.left = pct.toFixed(2) + "%";
       w.thumb.setAttribute("aria-valuenow", String(gap));
+      w.info.textContent = speedInfoText(gap);
     });
     updateAutoHintLine();
   }
@@ -2902,6 +3107,7 @@ input, textarea, select {
       b.classList.toggle("shimmer-fill", isAct);
     });
 
+    shimmerOnTabOpen(tabName);
     if (tabName === "home") renderHomeTab();
     else if (tabName === "jap") renderCountScreen(true);
     else if (tabName === "schedule") {
@@ -2911,6 +3117,49 @@ input, textarea, select {
       renderHistoryTab(true);
     }
   }
+
+
+  /* ==========================================
+     TIMED SHIMMER (upper & lower: every 10s, middle: every 5s, plus once on first tab open)
+     ========================================== */
+  var SHIMMER_PLAY_MS = 1500;
+  var shimmerSeenTabs = {};
+  function shimmerGroupOf(el) {
+    if (el.closest(".header") || el.closest(".install-banner") || el.classList.contains("install-banner")) return "upper";
+    if (el.closest(".bottom-nav")) return "lower";
+    return "middle";
+  }
+  function isShown(el) {
+    return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
+  }
+  function playShimmer(groups, root) {
+    var scope = root || document;
+    var list = scope.querySelectorAll(".shimmer-fill, .tap-label");
+    for (var i = 0; i < list.length; i++) {
+      var el = list[i];
+      if (groups.indexOf(shimmerGroupOf(el)) === -1) continue;
+      if (!isShown(el)) continue;
+      el.classList.remove("shimmer-play");
+      void el.offsetWidth;
+      el.classList.add("shimmer-play");
+      (function(node) {
+        setTimeout(function() { node.classList.remove("shimmer-play"); }, SHIMMER_PLAY_MS);
+      })(el);
+    }
+  }
+  function shimmerOnTabOpen(tabName) {
+    var viewEl = document.getElementById("view-" + tabName);
+    if (!viewEl) return;
+    if (typeof shimmerSeenTabs === "undefined" || !shimmerSeenTabs) return;
+    if (shimmerSeenTabs[tabName]) return;
+    shimmerSeenTabs[tabName] = true;
+    setTimeout(function() {
+      playShimmer(["middle"], viewEl);
+      playShimmer(["upper", "lower"]);
+    }, 250);
+  }
+  setInterval(function() { playShimmer(["upper", "lower"]); }, 10000);
+  setInterval(function() { playShimmer(["middle"]); }, 5000);
 
   document.querySelectorAll(".nav-tab").forEach(function(btn) {
     btn.addEventListener("click", function() {
@@ -3183,13 +3432,70 @@ input, textarea, select {
     hrsVal: 1,
     hrsManual: false,
     naamIdx: 2,
-    naamManual: false
+    naamManual: false,
+    spdVal: 0.8,
+    spdManual: false
   };
+  var CG_SPD_PRESETS = [0.5, 0.8, 1, 2, 3];
+
+  var confirmCb = null;
+  function showConfirm(title, msg, onYes) {
+    document.getElementById("ui-cb-title").textContent = title;
+    document.getElementById("ui-cb-msg").textContent = msg;
+    document.getElementById("btn-cb-no").textContent = t("cb_no");
+    document.getElementById("btn-cb-yes").textContent = t("cb_yes");
+    confirmCb = onYes;
+    document.getElementById("confirm-overlay").classList.add("open");
+  }
+  function hideConfirm() {
+    document.getElementById("confirm-overlay").classList.remove("open");
+    confirmCb = null;
+  }
+
+  var titleEdited = false;
+  function currentCgNaamName() {
+    var nm = "";
+    if (cgState.naamManual) {
+      nm = (document.getElementById("inp-cg-custom-naam").value || "").trim().slice(0, 60);
+    }
+    if (!nm) {
+      var pObj = PRESET_NAMES[cgState.naamIdx] || PRESET_NAMES[0];
+      nm = state.lang === "hi" ? pObj.hi : pObj.en;
+    }
+    return nm;
+  }
 
   function autoFillChallengeTitle() {
     var inpTitle = document.getElementById("inp-cg-title");
-    var numStr = Number(cgState.goalVal || 1000).toLocaleString("en-IN");
-    inpTitle.value = numStr + " " + t("challenge_suffix");
+    if (titleEdited) return;
+    var goalNow = cgState.goalManual
+      ? (Number(document.getElementById("inp-cg-custom-goal").value) || cgState.goalVal)
+      : cgState.goalVal;
+    inpTitle.value = String(goalNow || 1000) + " " + currentCgNaamName() + " " + t("challenge_suffix");
+  }
+
+  function fmtDuration(sec) {
+    var h = Math.floor(sec / 3600);
+    var m = Math.round((sec % 3600) / 60);
+    if (m === 60) { h += 1; m = 0; }
+    var hu = state.lang === "hi" ? " घंटे " : "h ";
+    var mu = state.lang === "hi" ? " मिनट" : "m";
+    return h > 0 ? (h.toLocaleString("en-IN") + hu + m + mu) : (m + mu);
+  }
+
+  function updateCgPreview() {
+    var el = document.getElementById("ui-cg-prev");
+    if (!el) return;
+    var goal = cgState.goalManual ? (Number(document.getElementById("inp-cg-custom-goal").value) || cgState.goalVal) : cgState.goalVal;
+    var hrs = cgState.hrsManual ? (Number(document.getElementById("inp-cg-custom-hrs").value) || cgState.hrsVal) : cgState.hrsVal;
+    var gap = cgState.spdManual ? (Number(document.getElementById("inp-cg-custom-spd").value) || cgState.spdVal) : cgState.spdVal;
+    gap = Math.max(0.2, Math.min(10, gap));
+    var perDay = Math.max(1, Math.floor(hrs * 3600 / gap));
+    var days = Math.max(1, Math.ceil(goal / perDay));
+    el.innerHTML = speedInfoText(gap) + "<br>" + t("cg_prev")
+      .replace("{tot}", fmtDuration(goal * gap))
+      .replace("{days}", days.toLocaleString("en-IN"))
+      .replace("{h}", String(hrs));
   }
 
   function renderCreateGoalForm() {
@@ -3258,6 +3564,37 @@ input, textarea, select {
     });
     hrsWrap.appendChild(btnHrsMan);
 
+    var spdWrap = document.getElementById("cg-spd-chips");
+    var inpCustomSpd = document.getElementById("inp-cg-custom-spd");
+    spdWrap.innerHTML = "";
+    CG_SPD_PRESETS.forEach(function(g) {
+      var b = document.createElement("button");
+      var isSel = !cgState.spdManual && Math.abs(cgState.spdVal - g) < 0.01;
+      b.className = "chip" + (isSel ? " shimmer-fill" : "");
+      b.textContent = g + "s";
+      b.addEventListener("click", function() {
+        playBtnSound(state.snds.b);
+        cgState.spdManual = false;
+        cgState.spdVal = g;
+        inpCustomSpd.classList.add("hidden");
+        renderCreateGoalForm();
+      });
+      spdWrap.appendChild(b);
+    });
+    var btnSpdMan = document.createElement("button");
+    btnSpdMan.className = "chip" + (cgState.spdManual ? " shimmer-fill" : "");
+    btnSpdMan.textContent = t("manual_edit");
+    btnSpdMan.addEventListener("click", function() {
+      playBtnSound(state.snds.b);
+      cgState.spdManual = true;
+      inpCustomSpd.classList.remove("hidden");
+      inpCustomSpd.value = String(cgState.spdVal);
+      inpCustomSpd.focus();
+      renderCreateGoalForm();
+    });
+    spdWrap.appendChild(btnSpdMan);
+    updateCgPreview();
+
     var naamWrap = document.getElementById("cg-naam-chips");
     var inpCustomNaam = document.getElementById("inp-cg-custom-naam");
     naamWrap.innerHTML = "";
@@ -3272,6 +3609,7 @@ input, textarea, select {
         cgState.naamManual = false;
         cgState.naamIdx = idx;
         inpCustomNaam.classList.add("hidden");
+        autoFillChallengeTitle();
         renderCreateGoalForm();
       });
       naamWrap.appendChild(b);
@@ -3285,20 +3623,44 @@ input, textarea, select {
       cgState.naamManual = true;
       inpCustomNaam.classList.remove("hidden");
       inpCustomNaam.focus();
+      autoFillChallengeTitle();
       renderCreateGoalForm();
     });
     naamWrap.appendChild(btnNaamMan);
   }
 
+  document.getElementById("inp-cg-custom-naam").addEventListener("input", function() {
+    autoFillChallengeTitle();
+  });
+  document.getElementById("inp-cg-title").addEventListener("input", function() {
+    titleEdited = this.value.trim() !== "";
+  });
+  document.getElementById("btn-cb-no").addEventListener("click", function() { playBtnSound(state.snds.b); hideConfirm(); });
+  document.getElementById("confirm-overlay").addEventListener("click", function(e) {
+    if (e.target === this) hideConfirm();
+  });
+  document.getElementById("btn-cb-yes").addEventListener("click", function() {
+    var cb = confirmCb;
+    hideConfirm();
+    if (cb) cb();
+  });
+
   document.getElementById("inp-cg-custom-goal").addEventListener("input", function() {
     var v = clampNum(this.value, 1, MAX_NUM);
     cgState.goalVal = v;
     autoFillChallengeTitle();
+    updateCgPreview();
   });
 
   document.getElementById("inp-cg-custom-hrs").addEventListener("input", function() {
     var v = Number(this.value);
     if (v > 0 && v <= 24) cgState.hrsVal = v;
+    updateCgPreview();
+  });
+  document.getElementById("inp-cg-custom-spd").addEventListener("input", function() {
+    var v = Number(this.value);
+    if (v >= 0.2 && v <= 10) cgState.spdVal = v;
+    updateCgPreview();
   });
 
   document.getElementById("btn-create-goal-submit").addEventListener("click", function() {
@@ -3324,10 +3686,13 @@ input, textarea, select {
 
     var rawChallengeTitle = document.getElementById("inp-cg-title").value.trim().slice(0, 60);
     if (!rawChallengeTitle) {
-      rawChallengeTitle = goalCount.toLocaleString("en-IN") + " " + t("challenge_suffix");
+      rawChallengeTitle = goalCount + " " + chosenNaam + " " + t("challenge_suffix");
     }
+    titleEdited = false;
 
-    var currentGap = getActiveSession().gap || 0.8;
+    var currentGap = clampGap(cgState.spdManual
+      ? (Number(document.getElementById("inp-cg-custom-spd").value) || cgState.spdVal)
+      : cgState.spdVal);
     var newGoalSession = {
       id: shortId(),
       name: chosenNaam,
@@ -3340,6 +3705,7 @@ input, textarea, select {
     };
 
     state.sessions.unshift(newGoalSession);
+    setTimeout(function() { titleEdited = false; autoFillChallengeTitle(); }, 0);
     state.active = newGoalSession.id;
     saveState();
     renderAllTextAndUI();
@@ -3515,17 +3881,9 @@ input, textarea, select {
       var btnDel = document.createElement("button");
       btnDel.className = "small-btn del";
       btnDel.textContent = "🗑";
-      var delPending = false;
       btnDel.addEventListener("click", function() {
-        if (!delPending) {
-          playBtnSound(state.snds.b);
-          delPending = true;
-          btnDel.textContent = t("conf");
-          setTimeout(function() {
-            delPending = false;
-            btnDel.textContent = "🗑";
-          }, 3000);
-        } else {
+        playBtnSound(state.snds.b);
+        showConfirm(t("del_title"), t("del_msg").replace("{n}", s.challengeTitle || displaySessionName(s.name)), function() {
           playWhoosh();
           triggerVibrate(60);
           stopAutoAndResetIdle();
@@ -3540,7 +3898,7 @@ input, textarea, select {
           renderCountScreen(true);
           renderHomeTab();
           renderDrawerDynamicLists();
-        }
+        });
       });
 
       acts.appendChild(btnOpen);
@@ -3578,7 +3936,10 @@ input, textarea, select {
       { id: "rud", key: "s_rud" },
       { id: "jyoti", key: "s_jyoti" },
       { id: "flow", key: "s_flow" },
-      { id: "bub", key: "s_bub" }
+      { id: "bub", key: "s_bub" },
+      { id: "lotus", key: "s_lotus" },
+      { id: "tulsi", key: "s_tulsi" },
+      { id: "chakra", key: "s_chakra" }
     ];
     var sWrap = document.getElementById("theme-style-chips");
     sWrap.innerHTML = "";
@@ -3740,7 +4101,9 @@ input, textarea, select {
     document.getElementById("m-txt-bk").textContent = t("m_bk");
     document.getElementById("m-txt-rs").textContent = t("m_rs");
     document.getElementById("m-txt-in").textContent = t("m_in");
-    document.getElementById("m-txt-sh").textContent = t("m_sh");
+    document.getElementById("m-txt-pr").textContent = t("m_pr");
+    document.getElementById("ui-profile-welcome").textContent = t("pr_welcome");
+    document.getElementById("ui-cg-spd-lbl").textContent = t("cg_spd_lbl");
     document.getElementById("m-txt-ex").textContent = t("m_ex");
 
     document.getElementById("ui-bkh").textContent = t("bkh");
@@ -4143,7 +4506,7 @@ input, textarea, select {
       }
       if (data.lang === "en" || data.lang === "hi") state.lang = data.lang;
       if (VALID_THEMES.indexOf(data.theme) !== -1) state.theme = data.theme;
-      if (["classic","mala","rud","jyoti","flow","bub"].indexOf(data.style) !== -1) state.style = data.style;
+      if (["classic","mala","rud","jyoti","flow","bub","lotus","tulsi","chakra"].indexOf(data.style) !== -1) state.style = data.style;
       if (data.snds && typeof data.snds === "object") {
         state.snds.c = clampNum(data.snds.c, 0, 99);
         state.snds.b = clampNum(data.snds.b, 0, 6);
@@ -4227,6 +4590,11 @@ input, textarea, select {
     } else if (fromBanner) {
       var box = document.getElementById("box-install-steps");
       box.classList.toggle("hidden");
+    } else {
+      var inItem = document.querySelector('#drawer-list .menu-item[data-acc="in"]');
+      if (inItem && !inItem.classList.contains("open")) {
+        inItem.querySelector(".menu-row").click();
+      }
     }
   }
 
@@ -4256,20 +4624,6 @@ input, textarea, select {
   });
   document.getElementById("btn-menu-copy-link").addEventListener("click", function() {
     copyPageLink(this);
-  });
-
-  /* Share App */
-  document.getElementById("btn-menu-share").addEventListener("click", function() {
-    playBtnSound(state.snds.b);
-    var fb = document.getElementById("ui-share-feedback");
-    if (navigator.share) {
-      navigator.share({ title: t("title"), text: t("title"), url: location.href }).catch(function(){});
-    } else if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(location.href).then(function() {
-        fb.textContent = t("copied");
-        setTimeout(function() { fb.textContent = ""; }, 2500);
-      }).catch(function(){});
-    }
   });
 
   /* Exit App */
